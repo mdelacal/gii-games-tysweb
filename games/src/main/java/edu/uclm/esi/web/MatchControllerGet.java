@@ -18,6 +18,15 @@ public class MatchControllerGet {
 		Player player=(Player) session.getAttribute("player");
 		if (player==null)
 			throw new Exception("You need to be logged and to be in a match");
-		return player.move(coordinates);
+		
+		//new
+		try {
+			return player.move(coordinates);
+		}catch(Exception e) {
+			InvalidMatch error=new InvalidMatch(e.getMessage());
+			return error;
+		}
+		
+		//return player.move(coordinates);
 	}
 }
