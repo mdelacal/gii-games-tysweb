@@ -42,5 +42,13 @@ public class Manager {
 			jsa.put(eGames.nextElement().getName());
 		return jsa;
 	}
+	
+	//new
+	public Match move(Player player, JSONArray coordinates) throws Exception {
+		int[] iC=new int[coordinates.length()];
+		for(int i=0;i<iC.length;i++) 
+			iC[i]=coordinates.getInt(i);
+		return player.move(iC);
+	}
 
 }
