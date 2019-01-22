@@ -24,7 +24,8 @@ public class TictactoeBoard extends Board {
 			throw new Exception("Square occupied");
 		squares[row][col]=symbol;
 	}
-
+	
+	//esta creo que ya no la usamos, usamos la de abajo
 	public boolean win(Player player) {
 		char symbol=player==this.match.getPlayers().get(0) ? 'X' : 'O';
 		int i=0;
@@ -62,5 +63,51 @@ public class TictactoeBoard extends Board {
 				squares[1][1]!=null && squares[1][1]==symbol && 
 				squares[0][2]!=null && squares[0][2]==symbol;
 		return ristra1 || ristra2;
+	}
+	
+	//new
+	public Player getWinner() {
+		for (Player player : this.match.getPlayers()) { // new
+
+			char symbol = player == this.match.getPlayers().get(0) ? 'X' : 'O';
+			int i = 0;
+			boolean ristra1 = squares[i][0] != null && squares[i][0] == symbol && squares[i][1] != null
+					&& squares[i][1] == symbol && squares[i][2] != null && squares[i][2] == symbol;
+			i = 1;
+			boolean ristra2 = squares[i][0] != null && squares[i][0] == symbol && squares[i][1] != null
+					&& squares[i][1] == symbol && squares[i][2] != null && squares[i][2] == symbol;
+			i = 2;
+			boolean ristra3 = squares[i][0] != null && squares[i][0] == symbol && squares[i][1] != null
+					&& squares[i][1] == symbol && squares[i][2] != null && squares[i][2] == symbol;
+			if (ristra1 || ristra2 || ristra3)
+				// return true;
+				return player; // new
+			i = 0;
+			ristra1 = squares[0][i] != null && squares[0][i] == symbol && squares[1][i] != null
+					&& squares[1][i] == symbol && squares[2][i] != null && squares[2][i] == symbol;
+			i = 1;
+			ristra2 = squares[0][i] != null && squares[0][i] == symbol && squares[1][i] != null
+					&& squares[1][i] == symbol && squares[2][i] != null && squares[2][i] == symbol;
+			i = 2;
+			ristra3 = squares[0][i] != null && squares[0][i] == symbol && squares[1][i] != null
+					&& squares[1][i] == symbol && squares[2][i] != null && squares[2][i] == symbol;
+			if (ristra1 || ristra2 || ristra3)
+				// return true;
+				return player; // new
+			ristra1 = squares[0][0] != null && squares[0][0] == symbol && squares[1][1] != null
+					&& squares[1][1] == symbol && squares[2][2] != null && squares[2][2] == symbol;
+			ristra2 = squares[2][0] != null && squares[2][0] == symbol && squares[1][1] != null
+					&& squares[1][1] == symbol && squares[0][2] != null && squares[0][2] == symbol;
+			if (ristra1 || ristra2) // new
+				return player; // new
+		}// new meter dentro todo del for
+		// return ristra1 || ristra2;
+		return null;
+	}
+	
+	@Override
+	public boolean end() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
