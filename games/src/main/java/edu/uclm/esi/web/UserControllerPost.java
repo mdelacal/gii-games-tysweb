@@ -1,12 +1,16 @@
 package edu.uclm.esi.web;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.uclm.esi.games.Match;
 import edu.uclm.esi.games.Player;
@@ -14,6 +18,14 @@ import edu.uclm.esi.web.ws.WSServer;
 
 @RestController
 public class UserControllerPost {
+	//new
+	@RequestMapping(value="/register", method=RequestMethod.POST, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public Player register(String email, String userName, String pwd1, String pwd2) throws Exception {
+		if (!pwd1.equals(pwd2))
+			throw new Exception("Error: las contraseñas no coinciden");
+		Player player=Player.register(email, userName, pwd1);
+		return player;
+	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public Player loginPost(HttpSession session, String userName, String pwd) throws Exception {
@@ -30,5 +42,15 @@ public class UserControllerPost {
 		Match match=Manager.get().joinGame(player, gameName.substring(0, gameName.length()-1));
 		WSServer.send(match.getPlayers(), match); //new
 		return match;
+	}
+	
+	//new
+	@ExceptionHandler(Exception.class)
+	public ModelAndView handleError(HttpServletRequest req, Exception ex) {
+		ModelAndView result = new ModelAndView();
+		result.setViewName("respuesta");
+		result.addObject("exception", ex);
+		result.setStatus(HttpStatus.UNAUTHORIZED);
+		return result;
 	}
 }

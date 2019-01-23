@@ -3,6 +3,7 @@ package edu.uclm.esi.web;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,13 +14,14 @@ import edu.uclm.esi.games.Player;
 
 @RestController
 public class UserControllerGet {
-	
+
+	//CAMBIO: Devolvemos un JSONObject en vez de un Player
 	@RequestMapping("/register")
-	public Player register(@RequestParam(value="email") String email, @RequestParam(value="userName") String userName, @RequestParam(value="pwd1") String pwd1, @RequestParam(value="pwd2") String pwd2) throws Exception {
+	public JSONObject register(@RequestParam(value="email") String email, @RequestParam(value="userName") String userName, @RequestParam(value="pwd1") String pwd1, @RequestParam(value="pwd2") String pwd2) throws Exception {
 		if (!pwd1.equals(pwd2))
-			return null;
+			return new JSONObject().put("mensaje","Error: las contraseñas no coinciden");
 		Player player=Player.register(email, userName, pwd1);
-		return player;
+		return new JSONObject().put("mensaje", "OK");
 	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
