@@ -21,6 +21,8 @@ public class Player {
 	private String idGoogle;
 	@Bsonable
 	private String tipo;
+	@Bsonable
+	private byte[] foto;
 	
 	
 	public String getUserName() {
@@ -114,6 +116,10 @@ public class Player {
 		MongoBroker.get().insert(token);
 		EMailSenderService email = new EMailSenderService();
 		email.enviarPorGmail(this.email, token.getValor());
+	}
+
+	public void setFoto(byte[] bytes) {
+		this.foto=bytes;
 	}
 
 	

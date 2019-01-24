@@ -61,7 +61,16 @@
 			<label data-ng-bind="opponentName"></label>
 		</td>
 	</tr>
+	<tr>
+		<td>
+			<br>
+				<input type="file" id="foto">
+				<button data-ng-click="subirFoto()">Subir foto</button>
+			<br>
+		</td>
+	</tr>
 </table>
+	
 	<a href="index.html">Ir a ejemplos sin JSON y por GET</a>
 	
 <script>
@@ -93,6 +102,21 @@ app.controller("GameController", function($scope, $http) {
 			}
 		);
 	};
+	$scope.subirFoto = function() {
+		var file = foto.files[0];
+		var reader = new FileReader();
+		
+		reader.onload = function(e){
+			var blob=new Blob(reader.result);
+			var blobReader=new FileReader();
+			blobReader.onload = function(event){
+				var buffer=event.target.result;
+				$scope.ws.send(buffer);
+			};
+			blobReader.readAsArrayBuffer(blob);
+		}
+		reader.readAsArrayBuffer(file);
+	}
 	$scope.register = function() {
 		var recurso="/register";
 		var data="userName=" + $scope.userName + 

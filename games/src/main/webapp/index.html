@@ -90,7 +90,8 @@
 						</a>
 					</div>
 					<div class="g-signin2" data-onsuccess="onSignIn"></div>
-					<a href="http://localhost:8080/solicitarToken?userName=maco"></a>	
+					
+					<a href="http://localhost:8080/solicitarToken?userName=maco">Solicitar token</a>	
 					<br>
 				
 					<a href="post/index.html" class="text-center w-full p-t-42">Ir a ejemplos con JSON, POST y jQuery</a><br>
@@ -115,6 +116,7 @@
 	<script src="js/main.js"></script>
 	
 	<script>
+	//new
 	function onSignIn(googleUser) {
 	  	var profile = googleUser.getBasicProfile();
 	  	registrarOLoguear(profile.getId(), profile.getName(), profile.getEmail());
