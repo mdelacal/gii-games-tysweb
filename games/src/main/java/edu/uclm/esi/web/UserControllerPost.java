@@ -34,6 +34,28 @@ public class UserControllerPost {
 		return player;
 	}
 	
+	//new
+	@RequestMapping(value="/registrarOLoguear", method=RequestMethod.POST, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public Player loginConGoogle(HttpSession session, String idGoogle, String nombre, String email) throws Exception {
+		Player player = null;
+		try {
+			player=Player.identifyGoogle(idGoogle, nombre, email);
+		}catch (Exception e){
+			Player.registerGoogle(idGoogle, nombre, email);
+			player=Player.identifyGoogle(idGoogle, nombre, email);
+		}
+		session.setAttribute("player", player);
+		return player;
+		
+	}
+	
+	//new OJO POR GET
+	@RequestMapping(value="/solicitarToken", method=RequestMethod.GET, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public Player solicitarToken(HttpSession session, String userName) throws Exception {
+		return Player.solicitarToken(userName);
+			
+	}
+	
 	@RequestMapping(value= {"/joinGame", "/post/joinGame"}, method=RequestMethod.POST, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE) 
 	public Match joinGamePost(HttpSession session, @RequestBody String gameName) throws Exception {
 		Player player=(Player) session.getAttribute("player");

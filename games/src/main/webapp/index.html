@@ -4,6 +4,7 @@
 	<title>TySWeb</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="google-signin-client_id" content="63933635623-liedbvfl5mulgoa3sqtqb1tu28vlam2t.apps.googleusercontent.com">
 <!--===============================================================================================-->	
 	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
 <!--===============================================================================================-->
@@ -22,6 +23,8 @@
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 <!--===============================================================================================-->
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	
 </head>
 <body>
 	
@@ -33,7 +36,7 @@
 						Login
 					</span>
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "Introduzca un nombre de usuario">
-						<input class="input100" type="text" name="email" placeholder="Usuario">
+						<input id="userNameLogin" class="input100" type="text" name="email" placeholder="Usuario">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
 							<span class="lnr lnr-envelope"></span>
@@ -41,7 +44,7 @@
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "Por favor, escriba la contraseña">
-						<input class="input100" type="password" name="pass" placeholder="Contraseña">
+						<input id="pwdLogin" class="input100" type="password" name="pass" placeholder="Contraseña">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
 							<span class="lnr lnr-lock"></span>
@@ -67,14 +70,14 @@
 						</span>
 					</div>
 
-					<a href="#" class="btn-twitter m-b-10">
-						<img src="images/icons/icon-twitter.png" alt="TWITTER">				
-						Twitter
-					</a>
-
 					<a href="#" class="btn-google m-b-10">
 						<img src="images/icons/icon-google.png" alt="GOOGLE">
 						Google
+					</a>
+
+					<a href="#" class="btn-twitter m-b-10">
+						<img src="images/icons/icon-twitter.png" alt="TWITTER">				
+						Twitter
 					</a>
 
 					<div class="text-center w-full p-t-55">
@@ -86,7 +89,10 @@
 							Regístrate						
 						</a>
 					</div>
+					<div class="g-signin2" data-onsuccess="onSignIn"></div>
+					<a href="http://localhost:8080/solicitarToken?userName=maco"></a>	
 					<br>
+				
 					<a href="post/index.html" class="text-center w-full p-t-42">Ir a ejemplos con JSON, POST y jQuery</a><br>
 					<a href="angular/index.html" class="text-center w-full">Ir a ejemplos con JSON, POST y Angular</a><br>
 					<a href="indexppt.html" class="text-center w-full">Piedra, papel, tijera</a>
@@ -107,6 +113,43 @@
 	<script src="vendor/select2/select2.min.js"></script>
 <!--===============================================================================================-->
 	<script src="js/main.js"></script>
-
+	
+	<script>
+	function onSignIn(googleUser) {
+	  	var profile = googleUser.getBasicProfile();
+	  	registrarOLoguear(profile.getId(), profile.getName(), profile.getEmail());
+	  	
+	  	//console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+	  	//console.log('Name: ' + profile.getName());
+	  	//console.log('Image URL: ' + profile.getImageUrl());
+	  	//console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+	}
+	
+	//new
+	function registrarOLoguear(idGoogle, nombre, email){
+		var req=new XMLHttpRequest();
+		req.open("POST", "registrarOLoguear");
+		req.setRequestHeader("Content-Type", "application/x-www-form-encoded");
+		req.onreadystatechenge =  function(){
+			if(request.readyState==4 && request.status==200){
+				$scope.userName=response.data.resultado.userName;
+				$("#divMenu").hide();
+				$("#divLogin").hide();
+				$("#divRegistro").hide();
+				$("#logout").show();
+				$("#divSeleccionDeJuego").show();
+				sessionStorage.userName=$scope.userName;
+				$("#mensajeCorto").html("Conectado como " + $scope.userName);
+				$scope.loadGames();
+				$scope.conectar();
+			}
+		};
+		var p="idGoogle=" + idGoogle + "&nombre=" + nombre +"&email=" + email;
+		req.send(p);
+	}
+	
+	
+	
+	</script>
 </body>
 </html>

@@ -17,6 +17,11 @@ public class Player {
 	private String pwd;
 	@JsonIgnore
 	private Match currentMatch;
+	@Bsonable
+	private String idGoogle;
+	@Bsonable
+	private String tipo;
+	
 	
 	public String getUserName() {
 		return userName;
@@ -44,6 +49,15 @@ public class Player {
 		Player player=(Player) MongoBroker.get().loadOne(Player.class, criterion);
 		return player;
 	}
+	//new
+	public static Player identifyGoogle(String id, String nombre, String email) throws Exception {
+		BsonDocument criterion=new BsonDocument();
+		criterion.append("idGoogle", new BsonString(id)).put("userName", new BsonString(nombre));
+		criterion.append("email", new BsonString(email));
+		criterion.append("tipo", new BsonString("Google"));
+		Player player=(Player) MongoBroker.get().loadOne(Player.class, criterion);
+		return player;
+	}
 
 	public static Player register(String email, String userName, String pwd) throws Exception {
 		Player player=new Player();
@@ -52,6 +66,22 @@ public class Player {
 		player.setPwd(pwd);
 		MongoBroker.get().insert(player);
 		return player;
+	}
+	
+	//new
+	public static Player registerGoogle(String id, String nombre, String email) throws Exception {
+		Player player=new Player();
+		player.setEmail(email);
+		player.setUserName(nombre);
+		player.setIdGoogle(id);
+		MongoBroker.get().insert(player);
+		return player;
+	}
+
+	private void setIdGoogle(String id) {
+		this.idGoogle=id;
+		this.tipo="Google";
+		
 	}
 
 	public void setCurrentMatch(Match match) {
@@ -65,4 +95,26 @@ public class Player {
 	public Match move(int[] coordinates) throws Exception {
 		return this.currentMatch.move(this, coordinates);
 	}
+
+	public static Player solicitarToken(String userName) {
+		Player player=null;
+		try {
+			BsonDocument criterion=new BsonDocument();
+			criterion.append("userName", new BsonString(userName));
+			player=(Player) MongoBroker.get().loadOne(Player.class, criterion);
+			player.createToken();
+		}catch (Exception e) {
+			
+		}
+		return player;
+	}
+
+	private void createToken() throws Exception {
+		Token token=new Token(this.userName);
+		MongoBroker.get().insert(token);
+		EMailSenderService email = new EMailSenderService();
+		email.enviarPorGmail(this.email, token.getValor());
+	}
+
+	
 }
