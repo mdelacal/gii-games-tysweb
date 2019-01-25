@@ -63,17 +63,32 @@
 	</tr>
 	<tr>
 		<td>
-			<br>
-				<input type="file" id="foto">
-				<button data-ng-click="subirFoto()">Subir foto</button>
-			<br>
+			<input type="file" id="foto">
+			<button data-ng-click="subirFoto()">Subir foto</button>
 		</td>
 	</tr>
 </table>
+<img id="imgFoto" width="100" height="100">
 	
 	<a href="index.html">Ir a ejemplos sin JSON y por GET</a>
 	
 <script>
+function subirFoto(){
+	var file = foto.files[0];
+	var reader = new FileReader();
+	
+	reader.onload = function(e){
+		var blob=new Blob(reader.result);
+		var blobReader=new FileReader();
+		blobReader.onload = function(event){
+			var buffer=event.target.result;
+			//$scope.ws.send(buffer);
+			chat.send(buffer);
+		};
+		blobReader.readAsArrayBuffer(blob);
+	}
+	reader.readAsArrayBuffer(file);
+}
 var app=angular.module("GameApp", []);
 app.controller("GameController", function($scope, $http) {
 	$scope.userName="";
@@ -107,16 +122,18 @@ app.controller("GameController", function($scope, $http) {
 		var reader = new FileReader();
 		
 		reader.onload = function(e){
-			var blob=new Blob(reader.result);
+			var blob=new Blob([reader.result]);
 			var blobReader=new FileReader();
 			blobReader.onload = function(event){
 				var buffer=event.target.result;
 				$scope.ws.send(buffer);
+				//chat.send(buffer);
 			};
 			blobReader.readAsArrayBuffer(blob);
 		}
 		reader.readAsArrayBuffer(file);
 	}
+	
 	$scope.register = function() {
 		var recurso="/register";
 		var data="userName=" + $scope.userName + 
@@ -185,8 +202,9 @@ app.controller("GameController", function($scope, $http) {
 			if(data.TYPE=="MATCH"){ //new
 				if(data.currentPlayer!=-1)
 					$scope.$apply($scope.estado="Partida comenzada");	
+			}else if(data.TYPE=="FOTO"){
+				imgFoto.src="data:image/jpeg;base64," + data.foto;
 			}
-				
 			//$scope.$apply($scope.estado=mensaje.data);
 			console.log(mensaje.data);
 		}

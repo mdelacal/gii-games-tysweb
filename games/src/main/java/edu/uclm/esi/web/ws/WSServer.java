@@ -1,10 +1,13 @@
 package edu.uclm.esi.web.ws;
 
+import java.io.IOException;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bson.BsonDocument;
 import org.bson.BsonString;
+import org.bson.internal.Base64;
+import org.json.JSONException;
 import org.json.JSONObject; //new import
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.stereotype.Component;
@@ -25,6 +28,7 @@ public class WSServer extends TextWebSocketHandler {
 	private ConcurrentHashMap<String, WebSocketSession> sessionsById=new ConcurrentHashMap<>();
 	private static ConcurrentHashMap<String, WebSocketSession> sessionsByPlayer=new ConcurrentHashMap<>(); //new-> lo pongo static
 	
+	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		sessionsById.put(session.getId(), session);
@@ -33,9 +37,28 @@ public class WSServer extends TextWebSocketHandler {
 		if (sessionsByPlayer.get(userName)!=null) {
 			sessionsByPlayer.remove(userName);
 		}
+		//cosas nuevas para la foto
+		byte[] foto=player.loadFoto();
+		if(foto!=null)
+			sendBinary(session, foto);
 		sessionsByPlayer.put(userName, session);
 	}
 	
+	//new
+	private void sendBinary(WebSocketSession session, byte[] foto) throws JSONException, IOException {
+		String imagen = Base64.encode(foto);
+		JSONObject jso = new JSONObject();
+		try {
+			jso.put("TYPE", "FOTO");
+			jso.put("foto", imagen);
+			WebSocketMessage<?> message=new TextMessage(jso.toString());
+			session.sendMessage(message);
+		}catch(JSONException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		System.out.println(message.getPayload());
@@ -43,19 +66,27 @@ public class WSServer extends TextWebSocketHandler {
 	
 	//new
 	@Override
-	protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
+	protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message){
 		Player player = (Player) session.getAttributes().get("player");
 		byte[] bytes=message.getPayload().array();
-		player.setFoto(bytes);
+		try {
+			MongoBroker.get().insertBinary("Fotos", player.getUserName(), bytes);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//player.setFoto(bytes);
+		
+		/*
 		BsonDocument criterion=new BsonDocument();
 		criterion.append("userName", new BsonString(player.getUserName()));
 		MongoBroker.get().delete("Player", criterion);
-		
 		try {
 			MongoBroker.get().insert(player);
 		}catch(Exception e) {
-			
-		}
+			e.printStackTrace();
+		}*/
 		
 	}
 	
