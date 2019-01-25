@@ -24,4 +24,20 @@ public class Token {
 	public void setValor(String valor) {
 		this.valor=valor;
 	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public long getCaducidad() {
+		return caducidad;
+	}
+
+	public void setCaducidad(long caducidad) {
+		this.caducidad = caducidad;
+	}
 }

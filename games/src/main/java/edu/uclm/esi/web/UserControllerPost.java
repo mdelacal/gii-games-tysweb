@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -50,10 +51,9 @@ public class UserControllerPost {
 	}
 	
 	//new OJO POR GET
-	@RequestMapping(value="/solicitarToken", method=RequestMethod.GET, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public Player solicitarToken(HttpSession session, String userName) throws Exception {
-		return Player.solicitarToken(userName);
-			
+	@RequestMapping(value="/solicitarToken", method=RequestMethod.GET)
+	public Player solicitarToken(HttpSession session, @RequestParam(value="userName") String userName) throws Exception {
+		return Player.solicitarToken(userName);			
 	}
 	
 	@RequestMapping(value= {"/joinGame", "/post/joinGame"}, method=RequestMethod.POST, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE) 
