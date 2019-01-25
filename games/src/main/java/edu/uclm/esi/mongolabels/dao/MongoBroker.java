@@ -26,11 +26,13 @@ public class MongoBroker {
 	
 	private MongoClient client;
 	private MongoDatabase db;
-	private String user="tysweb";
+	//private String user="tysweb";
+	private String user="miguelwerseliotysweb";
 	private String pwd="tysweb20182019";
 	
 	private MongoBroker() {
-		this.serverUri="mongodb://" + user + ":" + pwd + "@ds159782.mlab.com:59782/juegos";
+		//this.serverUri="mongodb://" + user + ":" + pwd + "@ds159782.mlab.com:59782/juegos";
+		this.serverUri="mongodb://" + user + ":" + pwd + "@ds211865.mlab.com:11865/juegos";
 		MongoClientURI clientUri=new MongoClientURI(this.serverUri);
 		this.client=new MongoClient(clientUri);
 		String dbName=serverUri.substring(serverUri.lastIndexOf("/")+1);

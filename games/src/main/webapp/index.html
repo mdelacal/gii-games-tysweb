@@ -131,7 +131,7 @@
 	function registrarOLoguear(idGoogle, nombre, email){
 		var req=new XMLHttpRequest();
 		req.open("POST", "registrarOLoguear");
-		req.setRequestHeader("Content-Type", "application/x-www-form-encoded");
+		req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		req.onreadystatechenge =  function(){
 			if(request.readyState==4 && request.status==200){
 				$scope.userName=response.data.resultado.userName;

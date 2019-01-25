@@ -83,7 +83,6 @@ public class Player {
 	private void setIdGoogle(String id) {
 		this.idGoogle=id;
 		this.tipo="Google";
-		
 	}
 
 	public void setCurrentMatch(Match match) {
