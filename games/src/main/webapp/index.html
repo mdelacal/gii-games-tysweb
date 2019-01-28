@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="angular/Game.js"></script>
 <head>
 	<title>TySWeb</title>
 	<meta charset="UTF-8">
@@ -29,14 +31,14 @@
 <body>
 	
 	<div class="limiter">
-		<div class="container-login100">
+		<div class="container-login100" data-ng-app="GameApp" data-ng-controller="GameController">
 			<div class="wrap-login100 p-l-50 p-r-50 p-t-77 p-b-30">
 				<form class="login100-form validate-form">
 					<span class="login100-form-title p-b-55">
 						Login
 					</span>
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "Introduzca un nombre de usuario">
-						<input id="userNameLogin" class="input100" type="text" name="email" placeholder="Usuario">
+						<input type="text" id="userNameLogin" data-ng-model="userName" class="input100" name="email" placeholder="Usuario">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
 							<span class="lnr lnr-envelope"></span>
@@ -44,7 +46,7 @@
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-16" data-validate = "Por favor, escriba la contraseña">
-						<input id="pwdLogin" class="input100" type="password" name="pass" placeholder="Contraseña">
+						<input type="password" id="pwdLogin" data-ng-model="pwd" class="input100" name="pass" placeholder="Contraseña">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
 							<span class="lnr lnr-lock"></span>
@@ -59,52 +61,35 @@
 					</div>
 					
 					<div class="container-login100-form-btn p-t-25">
-						<button class="login100-form-btn">
+						<button data-ng-click="login()" id="btnLogin" class="login100-form-btn">
 							Iniciar Sesión
 						</button>
 					</div>
 
 					<div class="text-center w-full p-t-42 p-b-22">
 						<span class="txt1">
-							O inicia sesión con tus redes sociales
+							O inicia sesión con tu cuenta de Google
 						</span>
 					</div>
-
-					<a href="#" class="btn-google m-b-10">
-						<img src="images/icons/icon-google.png" alt="GOOGLE">
-						Google
-					</a>
-
-					<a href="#" class="btn-twitter m-b-10">
-						<img src="images/icons/icon-twitter.png" alt="TWITTER">				
-						Twitter
-					</a>
-
+					<div class="g-signin2" style="margin-left: auto; margin-right: auto;" data-onsuccess="onSignIn"></div>
 					<div class="text-center w-full p-t-55">
 						<span class="txt1">
 							¿Todavía no eres miembro?
 						</span>
-
 						<a href="registrarse.html" class="txt1 bo1 hov1" href="#">
 							Regístrate						
 						</a>
 					</div>
-					<div class="g-signin2" data-onsuccess="onSignIn"></div>
-					
-					<a href="http://localhost:8080/solicitarToken?userName=miguelcal97">Solicitar token</a>	
-					<br>
-				
-					<a href="post/index.html" class="text-center w-full p-t-42">Ir a ejemplos con JSON, POST y jQuery</a><br>
+	
+					<a href="http://localhost:8080/solicitarToken?userName=miguelcal97" class="text-center w-full p-t-42">Solicitar token</a>			
+					<a href="post/index.html" class="text-center w-full">Ir a ejemplos con JSON, POST y jQuery</a><br>
 					<a href="angular/index.html" class="text-center w-full">Ir a ejemplos con JSON, POST y Angular</a><br>
 					<a href="indexppt.html" class="text-center w-full">Piedra, papel, tijera</a>
 				</form>
 			</div>
 		</div>
 	</div>
-	
-	
 
-	
 <!--===============================================================================================-->	
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
 <!--===============================================================================================-->
@@ -149,9 +134,34 @@
 		var p="idGoogle=" + idGoogle + "&nombre=" + nombre +"&email=" + email;
 		req.send(p);
 	}
-	
-	
-	
+	//new angular
+	var app=angular.module("GameApp", []);
+	app.controller("GameController", function($scope, $http) {
+		$scope.userName="";
+		$scope.pwd="";
+		$scope.estado="Desconectado";
+		$scope.opponentName="Waiting for an opponent...";
+		$scope.game=new Game();
+		$scope.login = function() {
+			var recurso="/login";
+			var data= "userName=" + $scope.userName + "&pwd=" + $scope.pwd;
+			var config = {
+				headers : {
+					'Content-Type' : 'application/x-www-form-urlencoded'
+				}		
+			};
+			$http.post(recurso, data, config).then(
+				function(response) {
+					//$scope.loadGames();
+					sessionStorage.userName=response.userName;
+					alert('Login OK');
+				},
+				function(response) {
+					alert("Error");
+				}
+			);
+		};
+	});
 	</script>
 </body>
 </html>
