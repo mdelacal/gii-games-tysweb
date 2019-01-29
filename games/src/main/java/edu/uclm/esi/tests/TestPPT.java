@@ -22,8 +22,8 @@ public class TestPPT {
   private StringBuffer verificationErrors = new StringBuffer();
 
   public TestPPT() {
-	  System.setProperty("webdriver.chrome.driver", "D:/OneDrive - Universidad de Castilla-La Mancha/Universidad/4º/1º CUATRIMESTRE/Tecnologías y Sistemas Web/Prácticas/chromedriver.exe");
-	  System.setProperty("webdriver.gecko.driver", "D:/OneDrive - Universidad de Castilla-La Mancha/Universidad/4º/1º CUATRIMESTRE/Tecnologías y Sistemas Web/Prácticas/geckodriver.exe");
+	  System.setProperty("webdriver.chrome.driver", "C:/chromedriver.exe");
+	  System.setProperty("webdriver.gecko.driver", "C:/geckodriver.exe");
   }
   
   @Before

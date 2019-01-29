@@ -105,6 +105,8 @@
 	function onSignIn(googleUser) {
 	  	var profile = googleUser.getBasicProfile();
 	  	registrarOLoguear(profile.getId(), profile.getName(), profile.getEmail());
+	  	alert('Login google OK');
+	  	window.location.href = "menu.html";
 	  	
 	  	//console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
 	  	//console.log('Name: ' + profile.getName());
@@ -119,7 +121,7 @@
 		req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		req.onreadystatechenge =  function(){
 			if(request.readyState==4 && request.status==200){
-				$scope.userName=response.data.resultado.userName;
+				$scope.userName=response.data.resultado.userName;			
 				$("#divMenu").hide();
 				$("#divLogin").hide();
 				$("#divRegistro").hide();
@@ -128,7 +130,7 @@
 				sessionStorage.userName=$scope.userName;
 				$("#mensajeCorto").html("Conectado como " + $scope.userName);
 				$scope.loadGames();
-				$scope.conectar();
+				$scope.conectar();	
 			}
 		};
 		var p="idGoogle=" + idGoogle + "&nombre=" + nombre +"&email=" + email;
@@ -155,6 +157,7 @@
 					//$scope.loadGames();
 					sessionStorage.userName=response.userName;
 					alert('Login OK');
+					window.location.href = "menu.html";
 				},
 				function(response) {
 					alert("Error");
