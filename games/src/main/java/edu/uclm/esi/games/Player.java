@@ -23,56 +23,74 @@ public class Player {
 	private String tipo;
 	@Bsonable
 	private byte[] foto;
-	
-	
+
 	public String getUserName() {
 		return userName;
 	}
-	
+
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	private void setPwd(String pwd) {
-		this.pwd=pwd;
+		this.pwd = pwd;
 	}
 
 	public static Player identify(String userName, String pwd) throws Exception {
-		BsonDocument criterion=new BsonDocument();
+		BsonDocument criterion = new BsonDocument();
 		criterion.append("userName", new BsonString(userName)).put("pwd", new BsonString(pwd));
-		Player player=(Player) MongoBroker.get().loadOne(Player.class, criterion);
+		Player player = (Player) MongoBroker.get().loadOne(Player.class, criterion);
 		return player;
 	}
-	//new
+
+	// new
 	public static Player identifyGoogle(String id, String nombre, String email) throws Exception {
-		BsonDocument criterion=new BsonDocument();
+		BsonDocument criterion = new BsonDocument();
 		criterion.append("idGoogle", new BsonString(id)).put("userName", new BsonString(nombre));
 		criterion.append("email", new BsonString(email));
 		criterion.append("tipo", new BsonString("Google"));
-		Player player=(Player) MongoBroker.get().loadOne(Player.class, criterion);
+		Player player = (Player) MongoBroker.get().loadOne(Player.class, criterion);
 		return player;
 	}
 
 	public static Player register(String email, String userName, String pwd) throws Exception {
-		Player player=new Player();
+		Player player = new Player();
 		player.setEmail(email);
 		player.setUserName(userName);
 		player.setPwd(pwd);
-		MongoBroker.get().insert(player);
+		if (usuarioRegistrado(player) == false) //comprobamos si el usuario esta registrado
+			MongoBroker.get().insert(player);
+		else
+			return null;
 		return player;
 	}
-	
-	//new
+
+	// comprobar usuario registrado
+	public static boolean usuarioRegistrado(Player player) throws Exception {
+		// comprobar username
+		BsonDocument criterionUsername = new BsonDocument();
+		criterionUsername.append("userName", new BsonString(player.userName));
+		boolean existeUsername = MongoBroker.get().comprobarUsuario(Player.class, criterionUsername);
+
+		// comprobar email
+		BsonDocument criterionEmail = new BsonDocument();
+		criterionEmail.append("email", new BsonString(player.email));
+		boolean existeEmail = MongoBroker.get().comprobarUsuario(Player.class, criterionEmail);
+
+		return existeUsername || existeEmail;
+	}
+
+	// new
 	public static Player registerGoogle(String id, String nombre, String email) throws Exception {
-		Player player=new Player();
+		Player player = new Player();
 		player.setEmail(email);
 		player.setUserName(nombre);
 		player.setIdGoogle(id);
@@ -81,14 +99,14 @@ public class Player {
 	}
 
 	private void setIdGoogle(String id) {
-		this.idGoogle=id;
-		this.tipo="Google";
+		this.idGoogle = id;
+		this.tipo = "Google";
 	}
 
 	public void setCurrentMatch(Match match) {
-		this.currentMatch=match;
+		this.currentMatch = match;
 	}
-	
+
 	public Match getCurrentMatch() {
 		return currentMatch;
 	}
@@ -98,39 +116,38 @@ public class Player {
 	}
 
 	public static Player solicitarToken(String userName) {
-		Player player=null;
+		Player player = null;
 		try {
-			BsonDocument criterion=new BsonDocument();
+			BsonDocument criterion = new BsonDocument();
 			criterion.append("userName", new BsonString(userName));
-			player=(Player) MongoBroker.get().loadOne(Player.class, criterion);
+			player = (Player) MongoBroker.get().loadOne(Player.class, criterion);
 			player.createToken();
-		}catch (Exception e) {
-			
+		} catch (Exception e) {
+
 		}
 		return player;
 	}
 
 	private void createToken() throws Exception {
-		Token token=new Token(this.userName);
+		Token token = new Token(this.userName);
 		MongoBroker.get().insert(token);
 		EMailSenderService email = new EMailSenderService();
 		email.enviarPorGmail(this.email, token.getValor());
 	}
 
 	public void setFoto(byte[] bytes) {
-		this.foto=bytes;
+		this.foto = bytes;
 	}
 
 	public byte[] loadFoto() {
 		try {
 			BsonDocument criterion = new BsonDocument();
 			criterion.append("userName", new BsonString(this.userName));
-			BsonDocument result = MongoBroker.get().loadBinary("Fotos", criterion );
+			BsonDocument result = MongoBroker.get().loadBinary("Fotos", criterion);
 			return result.getBinary("bytes").getData();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
 
-	
 }

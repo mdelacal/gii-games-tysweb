@@ -41,7 +41,7 @@
 						<input type="text" id="userNameLogin" data-ng-model="userName" class="input100" name="email" placeholder="Usuario">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
-							<span class="lnr lnr-envelope"></span>
+							<span class="lnr lnr-user"></span>
 						</span>
 					</div>
 
@@ -105,7 +105,7 @@
 	function onSignIn(googleUser) {
 	  	var profile = googleUser.getBasicProfile();
 	  	registrarOLoguear(profile.getId(), profile.getName(), profile.getEmail());
-	  	alert('Login google OK');
+	  	alert('Registro/Login google OK');
 	  	window.location.href = "menu.html";
 	  	
 	  	//console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.

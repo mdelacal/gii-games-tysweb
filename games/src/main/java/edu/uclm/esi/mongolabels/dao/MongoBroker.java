@@ -132,6 +132,23 @@ public class MongoBroker {
 		return Bson2Object.getObject(bso);
 	}
 	
+	//comprueba si existe recorriendo los elementos de la base de datos
+	public boolean comprobarUsuario(Class<?> clazz, BsonDocument criterion) throws Exception {
+		boolean registrado = false;
+		Class<?> collectionClass=getCollectionClass(clazz);
+		String collectionClassName=collectionClass.getSimpleName();
+		MongoCollection<BsonDocument> collection=this.db.getCollection(collectionClassName, BsonDocument.class);
+		FindIterable<BsonDocument> iterator = collection.find(criterion);
+		if (iterator==null)
+			registrado = false;
+		BsonDocument bso=iterator.first();
+		if(bso==null)
+			registrado = false;
+		else
+			registrado = true;
+		return registrado;
+	}
+	
 	private Class<?> getCollectionClass(Class<?> clazz) {
 		Class<?> collectionClass=clazz;
 		while (collectionClass.getSuperclass()!=java.lang.Object.class)
