@@ -105,6 +105,7 @@
 	function onSignIn(googleUser) {
 	  	var profile = googleUser.getBasicProfile();
 	  	registrarOLoguear(profile.getId(), profile.getName(), profile.getEmail());
+	  	crearCookieGoogle(profile.getName(), profile.getEmail(), profile.getImageUrl());
 	  	alert('Registro/Login google OK');
 	  	window.location.href = "menu.html";
 	  	
@@ -136,6 +137,27 @@
 		var p="idGoogle=" + idGoogle + "&nombre=" + nombre +"&email=" + email;
 		req.send(p);
 	}
+	
+	//crear cookie con usuario y password
+	function crearCookie() {
+		var key = document.getElementById("userNameLogin").value;
+		var value = document.getElementById("pwdLogin").value;
+		value = window.btoa(value); //codificar pwd
+		var dias_caducidad = 7;
+		var d = new Date();
+		d.setTime(d.getTime() + (dias_caducidad * 24 * 60 * 60 * 1000));
+		var expires = "expires=" + d.toUTCString();
+		document.cookie = key + "=" + value + "; " + expires;
+	}
+	
+	//crear cookie Google con usuario y password
+	function crearCookieGoogle(username, email, urlfoto) {	
+		sessionStorage.userName=username;
+		sessionStorage.email=email;
+		sessionStorage.urlfoto=urlfoto;
+		
+	}
+	
 	//new angular
 	var app=angular.module("GameApp", []);
 	app.controller("GameController", function($scope, $http) {
@@ -155,9 +177,12 @@
 			$http.post(recurso, data, config).then(
 				function(response) {
 					//$scope.loadGames();
-					sessionStorage.userName=response.userName;
+					crearCookie();
+					sessionStorage.userName=response.data.userName;
+					sessionStorage.email=response.data.email;
 					alert('Login OK');
-					window.location.href = "menu.html";
+					window.location.href = "menu.html"; 
+					//$scope.conectar();
 				},
 				function(response) {
 					alert("Error");

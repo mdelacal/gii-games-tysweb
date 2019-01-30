@@ -1,68 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script src="angular/Game.js"></script>
 <head>
-	<title>TySWeb</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="google-signin-client_id" content="63933635623-liedbvfl5mulgoa3sqtqb1tu28vlam2t.apps.googleusercontent.com">
-<!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<title>TySWeb</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-signin-client_id"
+	content="63933635623-liedbvfl5mulgoa3sqtqb1tu28vlam2t.apps.googleusercontent.com">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<link rel="icon" type="image/png" href="images/icons/favicon.ico" />
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css"
+	href="vendor/bootstrap/css/bootstrap.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+<link rel="stylesheet" type="text/css"
+	href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<link rel="stylesheet" type="text/css"
+	href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+<link rel="stylesheet" type="text/css"
+	href="vendor/css-hamburgers/hamburgers.min.css">
 <!--===============================================================================================-->
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
-	
+<link rel="stylesheet" type="text/css"
+	href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href="css/util.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
 </head>
 <body>
-	
+
 	<div class="limiter">
-		<div class="container-login100" data-ng-app="GameApp" data-ng-controller="GameController">
+		<div class="container-login100" data-ng-app="GameApp"
+			data-ng-controller="GameController">
 			<div class="wrap-login100 p-l-50 p-r-50 p-t-77 p-b-30 col-lg-6">
 				<form class="login100-form validate-form">
-					<span class="login100-form-title p-b-55">
-						Menu principal
-					</span>
-		
-					<div class="container-login100-form-btn p-t-25">					
+					<span class="login100-form-title p-b-25"> Menu principal </span> <img
+						id="imgFoto" width="50" height="50">
+					<div id="nombreUsuario"></div>
+					<div id="emailUsuario"></div>
+					<div class="container-login100-form-btn p-t-25">
 						<button data-ng-click="" id="btnPlayPPT" class="login100-form-btn">
 							<i class="fa fa-gamepad m-l-5 m-r-15" aria-hidden="true"></i>
 							Jugar a piedra papel tijera
 						</button>
 					</div>
 					<div class="container-login100-form-btn p-t-15">
-						<button data-ng-click="" id="btnPlayOther" class="login100-form-btn">
+						<button data-ng-click="" id="btnPlayOther"
+							class="login100-form-btn">
 							<i class="fa fa-gamepad m-l-5 m-r-15" aria-hidden="true"></i>
 							Jugar a otro juego
 						</button>
 					</div>
-					<div class="container-login100-form-btn p-t-45">
-						<button data-ng-click="http://localhost:8080/solicitarToken?userName=miguelcal97" class="login100-form-btn">
-							<i class="fa fa-key m-l-5 m-r-15" aria-hidden="true"></i>
-							Cambiar contraseña
+					<div class="container-login100-form-btn p-t-35">
+						<button
+							data-ng-click="http://localhost:8080/solicitarToken?userName=miguelcal97"
+							class="login100-form-btn">
+							<i class="fa fa-key m-l-5 m-r-15" aria-hidden="true"></i> Cambiar
+							contraseña
 						</button>
 					</div>
 					<div class="container-login100-form-btn p-t-15">
-						<button data-ng-click="" id="btnChangePhoto" class="login100-form-btn">
+						<button data-ng-click="" id="btnChangePhoto"
+							class="login100-form-btn">
 							<i class="fa fa-picture-o m-l-5 m-r-15" aria-hidden="true"></i>
 							Cambiar foto de perfil
 						</button>
 					</div>
-					<div class="container-login100-form-btn p-t-75">
+					<div class="container-login100-form-btn p-t-35">
 						<button id="btnLogout" class="login100-form-btn">
 							<i class="fa fa-power-off m-l-5 m-r-15" aria-hidden="true"></i>
 							Cerrar sesion
@@ -74,26 +86,62 @@
 		</div>
 	</div>
 
-<!--===============================================================================================-->	
+	<!--===============================================================================================-->
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="vendor/bootstrap/js/popper.js"></script>
 	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="vendor/select2/select2.min.js"></script>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="js/main.js"></script>
-	
+
 	<script>
-	//new angular
-	var app=angular.module("GameApp", []);
-	app.controller("GameController", function($scope, $http) {
-		$scope.userName="";
-		$scope.pwd="";
-		$scope.estado="Desconectado";
-		$scope.opponentName="Waiting for an opponent...";
-		$scope.game=new Game();
-	});
+		//new angular
+		var app = angular.module("GameApp", []);
+		app.controller("GameController", function($scope, $http) {
+
+			var conectar = function() {
+				$scope.userName = "";
+				$scope.pwd = "";
+				$scope.estado = "Desconectado";
+				$scope.opponentName = "Waiting for an opponent...";
+				$scope.game = new Game();
+				$scope.ws = new WebSocket("ws://localhost:8080/gamews");
+
+				$scope.ws.onopen = function() {
+					$scope.$apply($scope.estado = "Conectado");
+				}
+				$scope.ws.onmessage = function(mensaje) {
+					var data = mensaje.data; //new aqui viene la cadena json que recibo del servidor
+					data = JSON.parse(data); //new la convierto a json
+					if (data.TYPE == "MATCH") { //new
+						if (data.currentPlayer != -1)
+							$scope.$apply($scope.estado = "Partida comenzada");
+					} else if (data.TYPE == "FOTO") {
+						imgFoto.src = "data:image/jpeg;base64," + data.foto;
+					}
+					//$scope.$apply($scope.estado=mensaje.data);
+					//console.log(mensaje.data);
+					console.log(sessionStorage.getItem('email'));
+					console.log(sessionStorage.getItem('userName'));
+				}
+
+				$scope.ws.onerror = function(mensaje) {
+					$scope.$apply($scope.estado = "Error: " + mensaje.data);
+					console.log("Error: " + mensaje.data);
+				}
+
+				$scope.ws.onclose = function(mensaje) {
+					$scope.$apply($scope.estado = "Closed");
+				}
+			};
+
+			conectar();
+			nombreUsuario.innerHTML = 'Usuario: ' + sessionStorage.getItem('userName');
+			emailUsuario.innerHTML = 'Email: ' + sessionStorage.getItem('email');
+
+		});
 	</script>
 </body>
 </html>
