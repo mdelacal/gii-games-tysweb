@@ -4,10 +4,9 @@
 <script src="angular/Game.js"></script>
 
 <head>
-    <title>TySWeb</title>
+    <title>Registro</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="google-signin-client_id" content="63933635623-liedbvfl5mulgoa3sqtqb1tu28vlam2t.apps.googleusercontent.com">
     <!--===============================================================================================-->
     <link rel="icon" type="image/png" href="images/icons/favicon.ico" />
     <!--===============================================================================================-->
@@ -26,46 +25,26 @@
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!--===============================================================================================-->
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 
 <body>
     <div class="limiter">
         <div class="container-login100" data-ng-app="GameApp" data-ng-controller="GameController">
-            <div class="wrap-login100 p-l-50 p-r-50 p-t-77 p-b-30 col-lg-6">
+            <div class="wrap-login100 p-l-50 p-r-50 p-t-77 p-b-30 col-lg-4">
                 <form class="login100-form validate-form">
-                    <span class="login100-form-title p-b-25"> Menu principal </span> 
-                    <img id="imgFoto" width="50" height="50">
-                    <div id="nombreUsuario"></div>
-                    <div id="emailUsuario"></div>
+                    <span class="login100-form-title p-b-55">
+						Cambiar foto
+					</span>
+                    <div class="wrap-input100 m-b-16">
+                        <input type="file" id="foto" class="input100">
+                    </div>
+                    <div class="wrap-input100 m-b-16 p-t-17">
+                    	Foto actual
+                    </div>
+                    <img id="imgFoto" width="100" height="100">
                     <div class="container-login100-form-btn p-t-25">
-                        <button onclick="location.href='gamePPT.html'" id="btnPlayPPT" class="login100-form-btn">
-                            <i class="fa fa-gamepad m-l-5 m-r-15" aria-hidden="true"></i>
-                            Jugar a piedra papel tijera
-                        </button>
-                    </div>
-                    <div class="container-login100-form-btn p-t-15">
-                        <button data-ng-click="" id="btnPlayOther" class="login100-form-btn">
-                            <i class="fa fa-gamepad m-l-5 m-r-15" aria-hidden="true"></i>
-                            Jugar a otro juego
-                        </button>
-                    </div>
-                    <div class="container-login100-form-btn p-t-35">
-                        <button data-ng-click="sendToken()" id="btnChangePassword" class="login100-form-btn">
-                            <i class="fa fa-key m-l-5 m-r-15" aria-hidden="true"></i> Cambiar
-                            contraseña
-                        </button>
-                    </div>
-                    <div class="container-login100-form-btn p-t-15">
-                        <button onclick="location.href='cambiarfoto.html'"" id="btnChangePhoto" class="login100-form-btn">
-                            <i class="fa fa-picture-o m-l-5 m-r-15" aria-hidden="true"></i>
-                            Cambiar foto de perfil
-                        </button>
-                    </div>
-                    <div class="container-login100-form-btn p-t-35">
-                        <button id="btnLogout" class="login100-form-btn">
-                            <i class="fa fa-power-off m-l-5 m-r-15" aria-hidden="true"></i>
-                            Cerrar sesion
+                        <button data-ng-click="subirFoto()" class="login100-form-btn">
+                            Actualizar cambios
                         </button>
                     </div>
                 </form>
@@ -82,24 +61,51 @@
     <!--===============================================================================================-->
     <script src="js/main.js"></script>
     <script>
-    //new angular
+    function subirFoto() {
+        var file = foto.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            var blob = new Blob(reader.result);
+            var blobReader = new FileReader();
+            blobReader.onload = function(event) {
+                var buffer = event.target.result;
+                //$scope.ws.send(buffer);
+                chat.send(buffer);
+            };
+            blobReader.readAsArrayBuffer(blob);
+        }
+        reader.readAsArrayBuffer(file);
+    }
     var app = angular.module("GameApp", []);
     app.controller("GameController", function($scope, $http) {
-    	
-    	//enviar correo
-    	$scope.sendToken = function() {
-    		var username = sessionStorage.userName;
-			$http.get("/solicitarToken?userName=" + username).then(		
-				function(response) {
-					
-				},
-				function(response) {
-					alert("Error");
-				}
-			);
-		};
-		
-		//cargar imagen/username/email
+        $scope.userName = "";
+        $scope.pwd = "";
+        $scope.pwd1 = ""; //new
+        $scope.pwd2 = ""; //new
+        $scope.email = ""; //new
+        $scope.estado = "Desconectado";
+        $scope.opponentName = "Waiting for an opponent...";
+        $scope.game = new Game();
+
+        $scope.subirFoto = function() {
+            var file = foto.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                var blob = new Blob([reader.result]);
+                var blobReader = new FileReader();
+                blobReader.onload = function(event) {
+                    var buffer = event.target.result;
+                    $scope.ws.send(buffer);
+                    //chat.send(buffer);
+                };
+                blobReader.readAsArrayBuffer(blob);
+                window.location.href = "menu.html";
+            }
+            reader.readAsArrayBuffer(file);
+        }
+        //cargar imagen/username/email
         var conectar = function() {
             $scope.userName = "";
             $scope.pwd = "";
@@ -135,11 +141,8 @@
                 $scope.$apply($scope.estado = "Closed");
             }
         };
-        
-        conectar();
-        nombreUsuario.innerHTML = 'Usuario: ' + sessionStorage.getItem('userName');
-        emailUsuario.innerHTML = 'Email: ' + sessionStorage.getItem('email');
 
+        conectar();
     });
     </script>
 </body>
