@@ -40,7 +40,8 @@ public class EMailSenderService {
 
         MimeMessage msg = new MimeMessage(session);
         msg.setSubject("TySWeb - recuperación de contraseña");
-        msg.setText("Pulsa en el siguiente enlace para crear una nueva contraseña: http://localhost:8080/actualizarPwd.jsp?code=" + codigo);
+        //msg.setText("Pulsa en el siguiente enlace para crear una nueva contraseña: http://localhost:8080/actualizarPwd.jsp?code=" + codigo);
+        msg.setText("Pulsa en el siguiente enlace para crear una nueva contraseña: http://localhost:8080/cambiarpassword.html");
         msg.setFrom(new InternetAddress(this.remitente));
         msg.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
         Transport.send(msg);
