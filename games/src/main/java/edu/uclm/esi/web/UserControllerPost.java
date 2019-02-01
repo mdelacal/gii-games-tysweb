@@ -66,26 +66,37 @@ public class UserControllerPost {
 		BsonDocument tk = MongoBroker.get().loadOne("Token", criterion);
 		String userName = tk.getString("userName").getValue();
 		
-		//modificamos el username
-		BsonDocument result = MongoBroker.getPlayer(userName);
-		BsonDocument result_new = new BsonDocument();
+		//caducidad
+		long caducidad = tk.getInt64("caducidad").getValue();
+		long tiempoactual = System.currentTimeMillis();
 		
-		result_new.put("pwd", new BsonString(pwd1));
-		result_new.put("className", new BsonString(result.getString("className").getValue()));
-		result_new.put("email", new BsonString(result.getString("email").getValue()));
-		result_new.put("userName", new BsonString(result.getString("userName").getValue()));
-		try {
-			result_new.put("tipo", new BsonString(result.getString("tipo").getValue()));		
-		}catch(Exception e) {
+		//comprobamos si el token ha caducado
+		if(tiempoactual <= caducidad) {
+			//modificamos la password
+			BsonDocument result = MongoBroker.getPlayer(userName);
+			BsonDocument result_new = new BsonDocument();
 			
+			result_new.put("pwd", new BsonString(pwd1));
+			result_new.put("className", new BsonString(result.getString("className").getValue()));
+			result_new.put("email", new BsonString(result.getString("email").getValue()));
+			result_new.put("userName", new BsonString(result.getString("userName").getValue()));
+			try {
+				result_new.put("tipo", new BsonString(result.getString("tipo").getValue()));		
+			}catch(Exception e) {
+				
+			}
+			try {
+				result_new.put("idGoogle", new BsonString(result.getString("idGoogle").getValue()));		
+			}catch(Exception e) {
+				
+			}	
+			
+			MongoBroker.get().updateBson("Player", result, result_new);	
+			
+		}else {
+			throw new Exception("Error: Token caducado");
 		}
-		try {
-			result_new.put("idGoogle", new BsonString(result.getString("idGoogle").getValue()));		
-		}catch(Exception e) {
-			
-		}	
-		
-		MongoBroker.get().updateBson("Player", result, result_new);			
+				
 	}
 	
 	//new OJO POR GET
