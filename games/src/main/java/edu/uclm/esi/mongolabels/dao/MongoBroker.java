@@ -23,6 +23,7 @@ import com.mongodb.client.MapReduceIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
 
 import edu.uclm.esi.games.Player;
 
@@ -90,6 +91,11 @@ public class MongoBroker {
 		MongoCollection<BsonDocument> collection=this.db.getCollection(collectionName, BsonDocument.class);
 		collection.deleteOne(bso);
 		return bso.getObjectId("_id");
+	}
+	//new update
+	public void updateBson(String collectionName, BsonDocument bso, BsonDocument bsoNew) throws Exception {
+		MongoCollection<BsonDocument> collection=this.db.getCollection(collectionName, BsonDocument.class);
+		collection.replaceOne(bso, bsoNew); 
 	}
 	
 	public Object load(String className, ObjectId _id) throws Exception {

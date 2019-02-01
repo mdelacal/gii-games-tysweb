@@ -61,21 +61,31 @@ public class UserControllerPost {
 	@RequestMapping(value="/cambiarPassword", method=RequestMethod.POST, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public void changepassword(HttpSession session, String pwd1, String pwd2, String valor) throws Exception {
 		//aqui conseguimos el nombre de usuario del token
-		//String userName = Token.identifyUserToken(valor);
 		BsonDocument criterion = new BsonDocument();
 		criterion.append("valor", new BsonString(valor));
 		BsonDocument tk = MongoBroker.get().loadOne("Token", criterion);
 		String userName = tk.getString("userName").getValue();
 		
-		//ahora vamos a coger el player
+		//modificamos el username
 		BsonDocument result = MongoBroker.getPlayer(userName);
+		BsonDocument result_new = new BsonDocument();
 		
-		//lo eliminamos, modificamos e insertamos
-		MongoBroker.get().deleteBson("Player", result);
-		result.getString("pwd").getValue();
-		result.remove("pwd");		
-		result.put("pwd", new BsonString(pwd1));
-		MongoBroker.get().insertBson("Player", result);		
+		result_new.put("pwd", new BsonString(pwd1));
+		result_new.put("className", new BsonString(result.getString("className").getValue()));
+		result_new.put("email", new BsonString(result.getString("email").getValue()));
+		result_new.put("userName", new BsonString(result.getString("userName").getValue()));
+		try {
+			result_new.put("tipo", new BsonString(result.getString("tipo").getValue()));		
+		}catch(Exception e) {
+			
+		}
+		try {
+			result_new.put("idGoogle", new BsonString(result.getString("idGoogle").getValue()));		
+		}catch(Exception e) {
+			
+		}	
+		
+		MongoBroker.get().updateBson("Player", result, result_new);			
 	}
 	
 	//new OJO POR GET
