@@ -1,9 +1,18 @@
 package edu.uclm.esi.games;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.util.Date;
+
+import org.bson.BsonDateTime;
 import org.bson.BsonDocument;
+import org.bson.BsonInt64;
 import org.bson.BsonString;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 
 import edu.uclm.esi.mongolabels.dao.MongoBroker;
 import edu.uclm.esi.mongolabels.labels.Bsonable;
@@ -60,7 +69,7 @@ public class Player {
 		Player player = (Player) MongoBroker.get().loadOne(Player.class, criterion);
 		return player;
 	}
-
+	
 	public static Player register(String email, String userName, String pwd) throws Exception {
 		Player player = new Player();
 		player.setEmail(email);
@@ -149,5 +158,5 @@ public class Player {
 			return null;
 		}
 	}
-
+	
 }

@@ -63,7 +63,7 @@
                         </button>
                     </div>
                     <div class="container-login100-form-btn p-t-35">
-                        <button id="btnLogout" class="login100-form-btn">
+                        <button data-ng-click="logout()" id="btnLogout" class="login100-form-btn">
                             <i class="fa fa-power-off m-l-5 m-r-15" aria-hidden="true"></i>
                             Cerrar sesion
                         </button>
@@ -91,12 +91,18 @@
     		var username = sessionStorage.userName;
 			$http.get("/solicitarToken?userName=" + username).then(		
 				function(response) {
-					
+					alert('Se ha enviado un mensaje a tu email: ' + sessionStorage.getItem("email"));
 				},
 				function(response) {
 					alert("Error");
 				}
 			);
+		};
+		
+		//logout cuenta no google
+		$scope.logout = function() {
+			sessionStorage.clear();
+			window.location.href = "index.html";
 		};
 		
 		//cargar imagen/username/email

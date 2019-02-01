@@ -1,5 +1,6 @@
 package edu.uclm.esi.mongolabels.dao;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.bson.BsonBinary;
@@ -15,11 +16,15 @@ import org.json.JSONObject;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MapReduceIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+
+import edu.uclm.esi.games.Player;
 
 public class MongoBroker {
 	private String serverUri;
@@ -78,6 +83,12 @@ public class MongoBroker {
 	public BsonObjectId insertBson(String collectionName, BsonDocument bso) throws Exception {
 		MongoCollection<BsonDocument> collection=this.db.getCollection(collectionName, BsonDocument.class);
 		collection.insertOne(bso);
+		return bso.getObjectId("_id");
+	}
+	//new delete
+	public BsonObjectId deleteBson(String collectionName, BsonDocument bso) throws Exception {
+		MongoCollection<BsonDocument> collection=this.db.getCollection(collectionName, BsonDocument.class);
+		collection.deleteOne(bso);
 		return bso.getObjectId("_id");
 	}
 	
@@ -147,6 +158,16 @@ public class MongoBroker {
 		else
 			registrado = true;
 		return registrado;
+	}
+	
+	//new obtener el jugador para luego cambiarle la password
+	public static BsonDocument getPlayer(String userName) throws Exception {
+		BsonDocument criterion = new BsonDocument();
+		criterion.append("userName", new BsonString(userName));
+		Player player = (Player) MongoBroker.get().loadOne(Player.class, criterion);
+		BsonDocument result = MongoBroker.get().loadOne("Player", criterion);
+
+		return result;
 	}
 	
 	private Class<?> getCollectionClass(Class<?> clazz) {

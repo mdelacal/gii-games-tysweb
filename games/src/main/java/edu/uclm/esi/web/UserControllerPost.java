@@ -3,6 +3,8 @@ package edu.uclm.esi.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.bson.BsonDocument;
+import org.bson.BsonString;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.uclm.esi.games.Match;
 import edu.uclm.esi.games.Player;
+import edu.uclm.esi.games.Token;
+import edu.uclm.esi.mongolabels.dao.MongoBroker;
 import edu.uclm.esi.web.ws.WSServer;
 
 @RestController
@@ -51,6 +55,27 @@ public class UserControllerPost {
 		session.setAttribute("player", player);
 		return player;
 		
+	}
+	
+	//new cambiar password
+	@RequestMapping(value="/cambiarPassword", method=RequestMethod.POST, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void changepassword(HttpSession session, String pwd1, String pwd2, String valor) throws Exception {
+		//aqui conseguimos el nombre de usuario del token
+		//String userName = Token.identifyUserToken(valor);
+		BsonDocument criterion = new BsonDocument();
+		criterion.append("valor", new BsonString(valor));
+		BsonDocument tk = MongoBroker.get().loadOne("Token", criterion);
+		String userName = tk.getString("userName").getValue();
+		
+		//ahora vamos a coger el player
+		BsonDocument result = MongoBroker.getPlayer(userName);
+		
+		//lo eliminamos, modificamos e insertamos
+		MongoBroker.get().deleteBson("Player", result);
+		result.getString("pwd").getValue();
+		result.remove("pwd");		
+		result.put("pwd", new BsonString(pwd1));
+		MongoBroker.get().insertBson("Player", result);		
 	}
 	
 	//new OJO POR GET
