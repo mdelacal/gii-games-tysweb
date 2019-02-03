@@ -125,11 +125,10 @@
                         $scope.$apply($scope.estado = "Partida comenzada");
                 } else if (data.TYPE == "FOTO") {
                     imgFoto.src = "data:image/jpeg;base64," + data.foto;
+                    sessionStorage.urlfoto=imgFoto.src;
                 }
                 //$scope.$apply($scope.estado=mensaje.data);
                 //console.log(mensaje.data);
-                console.log(sessionStorage.getItem('email'));
-                console.log(sessionStorage.getItem('userName'));
             }
 
             $scope.ws.onerror = function(mensaje) {

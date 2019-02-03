@@ -1,6 +1,7 @@
 package edu.uclm.esi.web.ws;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,12 +38,16 @@ public class WSServer extends TextWebSocketHandler {
 		if (sessionsByPlayer.get(userName)!=null) {
 			sessionsByPlayer.remove(userName);
 		}
+		
 		//cosas nuevas para la foto
 		byte[] foto=player.loadFoto();
 		if(foto!=null)
 			sendBinary(session, foto);
 		sessionsByPlayer.put(userName, session);
+
 	}
+	
+	
 	
 	//new
 	private void sendBinary(WebSocketSession session, byte[] foto) throws JSONException, IOException {
@@ -61,7 +66,57 @@ public class WSServer extends TextWebSocketHandler {
 
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-		System.out.println(message.getPayload());
+		
+		JSONObject jso = new JSONObject(message.getPayload());
+		try {
+			jso.put("TYPE", jso.get("TYPE"));
+			jso.put("player", jso.get("player"));
+			jso.put("mensaje", jso.get("mensaje"));
+			//jso.put("imagen", jso.get("imagen"));
+			
+			
+			WebSocketMessage<?> msgchat=new TextMessage(jso.toString());
+			Collection<WebSocketSession> wss = sessionsByPlayer.values();
+			
+			for(WebSocketSession ws : wss) {
+				ws.sendMessage(msgchat);
+			}
+		}catch(JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void sendMsg(WebSocketSession session) throws JSONException, IOException {
+		JSONObject jso = new JSONObject();
+		try {
+			jso.put("TYPE", "MENSAJE");
+			jso.put("player", "yo");
+			jso.put("mensaje", "mensajito");
+			WebSocketMessage<?> message=new TextMessage(jso.toString());
+			session.sendMessage(message);
+		}catch(JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void sendMessages(Vector<Player> players, Match match) {
+		ObjectMapper mapper=new ObjectMapper();
+		//String jso;
+		JSONObject jso;
+		try {
+			//jso=mapper.writeValueAsString(match);
+			jso = new JSONObject(mapper.writeValueAsString(match));
+			jso.put("TYPE", "MATCH");
+			for(Player player : players) {
+				WebSocketSession session=sessionsByPlayer.get(player.getUserName());
+				//WebSocketMessage<?> message=new TextMessage(jso);
+				WebSocketMessage<?> message=new TextMessage(jso.toString());
+				session.sendMessage(message);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	//new

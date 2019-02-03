@@ -1,5 +1,7 @@
 <!doctype html>
 <html lang="en">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="angular/Game.js"></script>
 
 <head>
     <title>Piedra Papel Tijera</title>
@@ -18,26 +20,22 @@
     <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-    <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
     <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!--===============================================================================================-->
 </head>
 
-<body>
-    <div class="limiter">
-        <div class="container-login100">
+<body onload="conectarWS()">
+<div class="limiter">
+    <div class="container-login100">
             <div class="wrap-login100 w1260 p-l-25 p-r-25 p-t-30 p-b-10 col-lg-8">
                 <span class="login100-form-title p-b-55">
 						Partida de piedra papel tijera
 				</span>
-                <div class="row p-b-30"">
-                    <div class=" col-lg-6" style="padding-left: 2.2rem;">
+            <div class="row p-b-30">
+                <div class=" col-lg-6" style="padding-left: 2.2rem;">
                     <div>
                         <div class="contenedor p-t-15 p-b-30">
                             <div>
@@ -54,8 +52,10 @@
                     </div>
                     <div>
                         <div class="contenedor p-t-65">
-                            <img src="images/tijera.jpg" style="width: 20%;" id="avatar"><span id="nombre">Usuario</span>
-                            <img src="images/tijera.jpg" style="width: 20%;" id="avatar"><span id="nombre">Oponente</span>
+                            <img  style="width: 20%;" id="tiradausuario"><span id="nombre"></span>
+                            <span id="usuario">usuario</span>
+                            <img src="images/tijera.jpg" style="width: 20%;" id="tiradarival"><span id="nombre"></span>
+                            <span id="rival">rival</span>
                         </div>           
                     </div>
                     <div>
@@ -72,12 +72,12 @@
                             <div class="card-header">
                                 <span class="glyphicon glyphicon-comment"></span>Chat de jugadores
                             </div>
-                            <div class="card-body" style="overflow-y: auto; height: 350px;" id="aux-chat">
+                            <div class="card-body" style="overflow-y: auto; height: 350px;" id="chatjugadores">
                                 <ul class="chat"> </ul>
                             </div>
                             <div class="card-footer">
                                 <div class="input-group">
-                                    <input id="Mensaje" type="text" class="form-control input-sm" placeholder="Escribir..." />
+                                    <input id="msg" type="text" class="form-control input-sm" placeholder="Escribir..." />
                                     <span class="input-group-btn">
 			                            <button class="btn" id="btnEnviar" onclick="enviarMensaje()" style="color: #ffffff; background-color: #0250c5; border-color: #0250c5;">Enviar</button>
 			                        </span>
@@ -89,38 +89,95 @@
             </div>
         </div>
     </div>
-    </div>
-    <!--===============================================================================================-->
+</div>
+    
+<div id="dropDownSelect1"></div>
+	
+	<li style="display:none" id="plantilla" class="left clearfix">
+           <span class="chat-img pull-left">
+             <img src="images/tijera.jpg" id="avatar-chat" style="width: 50px; height: 50px;" class="rounded-circle" />
+           </span>
+           <div class="chat-body clearfix">
+                    <div class="header">
+                      	<strong class="primary-font Nombre">Jack Sparrow</strong> 
+                    </div>
+                    <p class="Mensaje">
+                           Mensaje
+                    </p>
+            </div>
+	</li>
+
+
+	<!--===============================================================================================-->
     <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="vendor/animsition/js/animsition.min.js"></script>
     <!--===============================================================================================-->
     <script src="vendor/bootstrap/js/popper.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <!--===============================================================================================-->
     <script src="vendor/select2/select2.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="vendor/daterangepicker/moment.min.js"></script>
-    <script src="vendor/daterangepicker/daterangepicker.js"></script>
-    <!--===============================================================================================-->
-    <script src="vendor/countdowntime/countdowntime.js"></script>
-    <!--===============================================================================================-->
+ <!--===============================================================================================-->
     <script src="js/main.js"></script>
+    
     <script>
-    /*
-    if (sessionStorage.getItem('email') != null) {
-        document.getElementById("nombre").innerHTML = sessionStorage.getItem('email');
-        cargarAvatar();
-    }*/
+    var ws={};
+    
+    function enviarMensaje(){
+    	//conectarWS(); lo hacemos en el body onload
+    	if (document.getElementById("msg").value!="") {
+    		var p = {
+    			TYPE: "MENSAJE",
+    			player: document.getElementById("usuario").innerHTML,
+    			mensaje: document.getElementById("msg").value,
+    			//imagen: sessionStorage.urlfoto
+    		};
+    		ws.send(JSON.stringify(p));
+    		//document.getElementById("msg").value="";
+    	}
+    }
+    
+    function conectarWS(){
+    	if (window.WebSocket==undefined) {
+    		alert("Lo sentimos, pero tu navegador no soporta este tipo de comunicación");
+    		return;
+    	}
+    	
+    	var url = "ws://localhost:8080/gamews";
+    	ws=new WebSocket(url);	
+    	
+    	ws.onmessage = function(datos) {
+    		var mensaje=datos.data;
+    		mensaje=JSON.parse(mensaje);
+    		console.log(datos.data);
+    		if (mensaje.TYPE == "MENSAJE") {
+    			console.log(datos.data);
+    			
+    			var jugador = mensaje.player;
+    			var mensajeMostrar = mensaje.mensaje;
+    			document.getElementById ("msg").value = "";
+    			$("#plantilla").clone().appendTo(".chat");
+                $('.chat #plantilla').show(10);
+                $('.chat #plantilla .Nombre').html(jugador);
+                $('.chat #plantilla .Mensaje').html(mensajeMostrar);
+                //$('.chat #plantilla #avatar-chat').attr("src", mensaje.imagen);
+                $('.chat #plantilla').attr("id","");        					
+    			
+                var chatjugadores = document.getElementById("chatjugadores");
+                chatjugadores.scrollTop = chatjugadores.scrollHeight;
+    		}else if (mensaje.TYPE == "FOTO") {
+                console.log("FOTILLO");
+            }
+    	}
+    	
+    	
+    }
+    
+    if (sessionStorage.getItem('userName') != null) {
+        document.getElementById("usuario").innerHTML = sessionStorage.getItem('userName');
+        tiradausuario.src=sessionStorage.urlfoto;
+    }
+    
     </script>
-    <script>
-    /*
-    var jugadores = [];
-    var lienzo = document.getElementById("tablero");
-    var tablero = new Tablero(lienzo);
-    tablero.dibujar();
-    */
-    </script>
+
 </body>
 
 </html>
