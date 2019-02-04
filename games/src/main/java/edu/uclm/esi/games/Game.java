@@ -34,7 +34,7 @@ public abstract class Game {
 				match=this.pendingMatches.remove(0);
 				inPlayMatches.put(match.getId(), match);
 				match.calculateFirstPlayer();
-				WSServer.send(match.getPlayers(), match); //new
+				WSServer.send(match.getPlayers(), match);
 			}
 		}
 		return match;

@@ -14,30 +14,21 @@ public class PPTMatch extends Match {
 	
 	@Override
 	public void calculateFirstPlayer() {
-		// TODO Auto-generated method stub
 		
 	}
 	
-	//new
 	@Override
 	public boolean tieneElTurno(Player player) throws Exception {
 		return true;
 	}
 
-	//new
+	
 	@Override
 	protected void save() throws Exception{
-		// TODO Auto-generated method stub
+		//guardamos el resultado de la partida en la tabla RESULT de la base de datos 
 		Result result=new Result(this.getPlayers().get(0).getUserName(), this.getPlayers().get(1).getUserName(),
 				this.winner.getUserName());
 		MongoBroker.get().insert(result);
 	}
-		
-	/* ALTERNATIVA
-	@Override
-	protected void save() throws Exception{
-		// TODO Auto-generated method stub
-		Result result=new Result(this.getPlayers());
-		MongoBroker.get().insert(result);
-	}*/
+
 }

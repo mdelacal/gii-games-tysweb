@@ -81,6 +81,7 @@ public class WSServer extends TextWebSocketHandler {
 			}catch(JSONException e) {
 				e.printStackTrace();
 			}
+			
 		//si se hace un movimiento en el PPT
 		}else if(jso.get("TYPE").equals("MOVIMIENTO")) {
 			Player player = (Player) session.getAttributes().get("player");
@@ -118,16 +119,14 @@ public class WSServer extends TextWebSocketHandler {
 	}
 	
 	public static void send(Vector<Player> players, Match match) {
+		//enviar mensaje a los players de ese match
 		ObjectMapper mapper=new ObjectMapper();
-		//String jso;
 		JSONObject jso;
 		try {
-			//jso=mapper.writeValueAsString(match);
 			jso = new JSONObject(mapper.writeValueAsString(match));
 			jso.put("TYPE", "MATCH");
 			for(Player player : players) {
 				WebSocketSession session=sessionsByPlayer.get(player.getUserName());
-				//WebSocketMessage<?> message=new TextMessage(jso);
 				WebSocketMessage<?> message=new TextMessage(jso.toString());
 				session.sendMessage(message);
 			}

@@ -43,7 +43,7 @@ public class Manager {
 		return jsa;
 	}
 	
-	//new
+	//movimiento del player con las coordinates
 	public Match move(Player player, JSONArray coordinates) throws Exception {
 		int[] iC=new int[coordinates.length()];
 		for(int i=0;i<iC.length;i++) 

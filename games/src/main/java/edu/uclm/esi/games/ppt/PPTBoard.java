@@ -13,7 +13,8 @@ public class PPTBoard extends Board {
 	
 	public PPTBoard(PPTMatch pptMatch) {
 		super(pptMatch);
-		this.tiradas0 = new int[] { -1, -1, -1}; //los jugadores todavía no han tirado
+		//inicializar tiradas a -1, los jugadores todavia no han tirado
+		this.tiradas0 = new int[] { -1, -1, -1}; 
 		this.tiradas1 = new int[] { -1, -1, -1};
 	}
 	
@@ -30,6 +31,7 @@ public class PPTBoard extends Board {
 		}
 	}
 
+	//rellenar los arrays de las tiradas
 	private int rellenar(int[] tiradas, int valor) {
 		for(int i=0; i<tiradas.length; i++) {
 			if(tiradas[i]==-1) {
@@ -40,24 +42,8 @@ public class PPTBoard extends Board {
 		return -1;
 	}
 	
-	//new
-	@Override
-	public Player getWinner() {
-		//new
-		for(int i=0; i<tiradas0.length; i++) {
-			if(tiradas0[i]==-1 || tiradas1[i]==-1)
-				//return false;
-				return null;
-		}//fin new
-		
-		/*if(this.match.getPlayers().get(0)==player)
-			return gana(tiradas0, tiradas1);*/
-		
-		return gana(tiradas1, tiradas0);
-	}
-	
-	//new
-	private Player gana(int[] a, int[] b) { //ahora aqui no devuelves boolean sino el player ganador
+	//devuelve el player ganador
+	private Player gana(int[] a, int[] b) { 
 		int victoriasA=0, victoriasB=0;
 		for(int i=0; i<a.length; i++) {
 			if(gana(a[i], b[i]))
@@ -68,7 +54,7 @@ public class PPTBoard extends Board {
 		return victoriasA>victoriasB ? this.match.getPlayers().get(0) : this.match.getPlayers().get(1);
 	}
 	
-	//new
+	//obtener el ganador de la partida
 	private boolean gana(int a, int b) {
 		if(a==PIEDRA && b==TIJERA)
 			return true;
@@ -76,13 +62,6 @@ public class PPTBoard extends Board {
 			return true;
 		if(a==PAPEL && b==PIEDRA)
 			return true;
-		return false;
-	}
-
-	//ya creo que no lo usamos
-	@Override
-	public boolean win(Player player) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
@@ -94,17 +73,26 @@ public class PPTBoard extends Board {
 		return tiradas1;
 	}
 	
-	//new
+	@Override
+	public Player getWinner() {
+		//obtener el ganador de la partida, si lo hay
+		for(int i=0; i<tiradas0.length; i++) {
+			if(tiradas0[i]==-1 || tiradas1[i]==-1)
+				return null;
+		}
+		return gana(tiradas0, tiradas1);
+	}
+	
 	@Override
 	public boolean end() {
+		//comprobar si la partida ha terminado
 		if(this.getWinner()!=null)
 			return true;
 		for(int i=0; i<tiradas0.length; i++) {
 			if(tiradas0[i]==-1 || tiradas1[i]==-1)
 				return false;
 		}
-		return true;
-		
+		return true;		
 	}
 
 }

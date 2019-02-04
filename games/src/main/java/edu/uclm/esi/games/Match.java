@@ -13,7 +13,7 @@ public abstract class Match {
 	public Match() {
 		this.id=UUID.randomUUID();
 		this.players=new Vector<>();
-		this.currentPlayer=-1; //new
+		this.currentPlayer=-1;
 	}
 	
 	public UUID getId() {
@@ -42,31 +42,32 @@ public abstract class Match {
 	}
 
 	public Match move(Player player, int[] coordinates) throws Exception {
-		/*if (this.players.get(currentPlayer)!=player)
-			throw new Exception("You are not the current player");*/
-		if (!tieneElTurno(player)) //new
-			throw new Exception("You are not the current player"); //new
-		if(this.board.end()) //new
-			throw new Exception("The match is finished"); //new
-		/*if (this.winner!=null)
+		//comprobar si eres el current player
+		if (!tieneElTurno(player))
+			throw new Exception("You are not the current player");
+		
+		//comprobar si la partida ha terminado
+		if(this.board.end())
 			throw new Exception("The match is finished");
-			*/
+		
+		//si antes no hay fallos hacemos el movimiento
 		this.board.move(player, coordinates);
+		//y cambiamos el current player
 		this.currentPlayer=(this.currentPlayer+1)%this.players.size();
-		/*
-		if (this.board.win ()) preguntamos si ha ganado
-			this.winner=player;*/
-		this.winner=this.board.getWinner(); //new
-		if(this.board.end()) //new
-			save();           //new
+		
+		//vemos quien ha ganado
+		this.winner=this.board.getWinner();
+		
+		//si la partida ha terminado guardamos el resultado en la tabla RESULT de la base de datos
+		if(this.board.end())
+			save();
 		
 		return this;
 	}
 
 	protected abstract void save() throws Exception;
-	//protected void save() throws Exception; ALTERNATIVA
 
-	protected abstract boolean tieneElTurno(Player player) throws Exception; //new
+	protected abstract boolean tieneElTurno(Player player) throws Exception;
 	
 	public abstract void calculateFirstPlayer();
 		
