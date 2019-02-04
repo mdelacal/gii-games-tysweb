@@ -93,17 +93,12 @@
     
 <div id="dropDownSelect1"></div>
 	
-	<li style="display:none" id="plantilla" class="left clearfix">
-           <span class="chat-img pull-left">
-             <img src="images/tijera.jpg" id="avatar-chat" style="width: 50px; height: 50px;" class="rounded-circle" />
-           </span>
+	<li style="display:none" id="chatDeJugadores" class="left clearfix"> 
            <div class="chat-body clearfix">
                     <div class="header">
-                      	<strong class="primary-font Nombre">Jack Sparrow</strong> 
+                      	<strong class="primary-font usuarioChat"></strong> 
                     </div>
-                    <p class="Mensaje">
-                           Mensaje
-                    </p>
+                    <p class="mensajeChat"></p>
             </div>
 	</li>
 
@@ -122,16 +117,14 @@
     var ws={};
     
     function enviarMensaje(){
-    	//conectarWS(); lo hacemos en el body onload
     	if (document.getElementById("msg").value!="") {
     		var p = {
     			TYPE: "MENSAJE",
     			player: document.getElementById("usuario").innerHTML,
     			mensaje: document.getElementById("msg").value,
-    			//imagen: sessionStorage.urlfoto
     		};
     		ws.send(JSON.stringify(p));
-    		//document.getElementById("msg").value="";
+			document.getElementById("msg").value = "";
     	}
     }
     
@@ -147,28 +140,24 @@
     	ws.onmessage = function(datos) {
     		var mensaje=datos.data;
     		mensaje=JSON.parse(mensaje);
-    		console.log(datos.data);
+    		
     		if (mensaje.TYPE == "MENSAJE") {
-    			console.log(datos.data);
-    			
     			var jugador = mensaje.player;
-    			var mensajeMostrar = mensaje.mensaje;
-    			document.getElementById ("msg").value = "";
-    			$("#plantilla").clone().appendTo(".chat");
-                $('.chat #plantilla').show(10);
-                $('.chat #plantilla .Nombre').html(jugador);
-                $('.chat #plantilla .Mensaje').html(mensajeMostrar);
-                //$('.chat #plantilla #avatar-chat').attr("src", mensaje.imagen);
-                $('.chat #plantilla').attr("id","");        					
+    			var mensajeEnviado = mensaje.mensaje;
+    			
+    			$("#chatDeJugadores").clone().appendTo(".chat");
+                $('.chat #chatDeJugadores').show(10);
+                $('.chat #chatDeJugadores .usuarioChat').html(jugador);
+                $('.chat #chatDeJugadores .mensajeChat').html(mensajeEnviado);
+                $('.chat #chatDeJugadores').attr("id","");        					
     			
                 var chatjugadores = document.getElementById("chatjugadores");
                 chatjugadores.scrollTop = chatjugadores.scrollHeight;
+                
     		}else if (mensaje.TYPE == "FOTO") {
-                console.log("FOTILLO");
+    			
             }
-    	}
-    	
-    	
+    	}	
     }
     
     if (sessionStorage.getItem('userName') != null) {

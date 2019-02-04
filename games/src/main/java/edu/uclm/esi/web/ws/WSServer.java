@@ -13,6 +13,7 @@ import org.json.JSONObject; //new import
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage; //new import
 import org.springframework.web.socket.WebSocketSession;
@@ -39,64 +40,60 @@ public class WSServer extends TextWebSocketHandler {
 			sessionsByPlayer.remove(userName);
 		}
 		
-		//cosas nuevas para la foto
+		//cargar foto
 		byte[] foto=player.loadFoto();
 		if(foto!=null)
 			sendBinary(session, foto);
 		sessionsByPlayer.put(userName, session);
-
 	}
 	
-	
-	
-	//new
-	private void sendBinary(WebSocketSession session, byte[] foto) throws JSONException, IOException {
-		String imagen = Base64.encode(foto);
-		JSONObject jso = new JSONObject();
-		try {
-			jso.put("TYPE", "FOTO");
-			jso.put("foto", imagen);
-			WebSocketMessage<?> message=new TextMessage(jso.toString());
-			session.sendMessage(message);
-		}catch(JSONException e) {
-			e.printStackTrace();
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) {
+		//si el usuario se va le quitamos de la lista de sesiones
+		Player player = (Player) session.getAttributes().get("player");
+		String userName=player.getUserName();
+		if (sessionsByPlayer.get(userName)!=null) {
+			sessionsByPlayer.remove(userName);
 		}
-		
 	}
 
 	@Override
-	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-		
+	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {		
 		JSONObject jso = new JSONObject(message.getPayload());
-		try {
-			jso.put("TYPE", jso.get("TYPE"));
-			jso.put("player", jso.get("player"));
-			jso.put("mensaje", jso.get("mensaje"));
-			//jso.put("imagen", jso.get("imagen"));
-			
-			
-			WebSocketMessage<?> msgchat=new TextMessage(jso.toString());
-			Collection<WebSocketSession> wss = sessionsByPlayer.values();
-			
-			for(WebSocketSession ws : wss) {
-				ws.sendMessage(msgchat);
+
+		//si llega un mensaje del chat
+		if(jso.get("TYPE").equals("MENSAJE")) {
+			try {
+				jso.put("TYPE", jso.get("TYPE"));
+				jso.put("player", jso.get("player"));
+				jso.put("mensaje", jso.get("mensaje"));
+					
+				WebSocketMessage<?> msgchat=new TextMessage(jso.toString());
+				Collection<WebSocketSession> wss = sessionsByPlayer.values();
+				
+				//se envia a todas las sesiones
+				for(WebSocketSession ws : wss) {
+					ws.sendMessage(msgchat);
+				}
+				
+			}catch(JSONException e) {
+				e.printStackTrace();
 			}
-		}catch(JSONException e) {
-			e.printStackTrace();
 		}
+		
 	}
 	
-	private void sendMsg(WebSocketSession session) throws JSONException, IOException {
-		JSONObject jso = new JSONObject();
+	@Override
+	protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message){
+		Player player = (Player) session.getAttributes().get("player");
+		byte[] bytes=message.getPayload().array();
 		try {
-			jso.put("TYPE", "MENSAJE");
-			jso.put("player", "yo");
-			jso.put("mensaje", "mensajito");
-			WebSocketMessage<?> message=new TextMessage(jso.toString());
-			session.sendMessage(message);
-		}catch(JSONException e) {
+			MongoBroker.get().insertBinary("Fotos", player.getUserName(), bytes);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 	
 	public static void sendMessages(Vector<Player> players, Match match) {
@@ -119,33 +116,20 @@ public class WSServer extends TextWebSocketHandler {
 		
 	}
 	
-	//new
-	@Override
-	protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message){
-		Player player = (Player) session.getAttributes().get("player");
-		byte[] bytes=message.getPayload().array();
+	private void sendBinary(WebSocketSession session, byte[] foto) throws JSONException, IOException {
+		//enviar la foto
+		String imagen = Base64.encode(foto);
+		JSONObject jso = new JSONObject();
 		try {
-			MongoBroker.get().insertBinary("Fotos", player.getUserName(), bytes);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			jso.put("TYPE", "FOTO");
+			jso.put("foto", imagen);
+			WebSocketMessage<?> message=new TextMessage(jso.toString());
+			session.sendMessage(message);
+		}catch(JSONException e) {
 			e.printStackTrace();
-		}
-		
-		//player.setFoto(bytes);
-		
-		/*
-		BsonDocument criterion=new BsonDocument();
-		criterion.append("userName", new BsonString(player.getUserName()));
-		MongoBroker.get().delete("Player", criterion);
-		try {
-			MongoBroker.get().insert(player);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}*/
-		
+		}	
 	}
 	
-	//new
 	public static void send(Vector<Player> players, Match match) {
 		ObjectMapper mapper=new ObjectMapper();
 		//String jso;
