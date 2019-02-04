@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bson.BsonDocument;
 import org.bson.BsonString;
 import org.bson.internal.Base64;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject; //new import
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
@@ -24,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper; //new import
 import edu.uclm.esi.games.Match;
 import edu.uclm.esi.games.Player;
 import edu.uclm.esi.mongolabels.dao.MongoBroker;
+import edu.uclm.esi.web.Manager;
 
 @Component
 public class WSServer extends TextWebSocketHandler {
@@ -79,6 +81,12 @@ public class WSServer extends TextWebSocketHandler {
 			}catch(JSONException e) {
 				e.printStackTrace();
 			}
+		//si se hace un movimiento en el PPT
+		}else if(jso.get("TYPE").equals("MOVIMIENTO")) {
+			Player player = (Player) session.getAttributes().get("player");
+			JSONArray coordinates = jso.getJSONArray("coordinate");
+			Match match = Manager.get().move(player, coordinates);
+			send(match.getPlayers(), match);
 		}
 		
 	}
@@ -92,28 +100,7 @@ public class WSServer extends TextWebSocketHandler {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-	}
-	
-	public static void sendMessages(Vector<Player> players, Match match) {
-		ObjectMapper mapper=new ObjectMapper();
-		//String jso;
-		JSONObject jso;
-		try {
-			//jso=mapper.writeValueAsString(match);
-			jso = new JSONObject(mapper.writeValueAsString(match));
-			jso.put("TYPE", "MATCH");
-			for(Player player : players) {
-				WebSocketSession session=sessionsByPlayer.get(player.getUserName());
-				//WebSocketMessage<?> message=new TextMessage(jso);
-				WebSocketMessage<?> message=new TextMessage(jso.toString());
-				session.sendMessage(message);
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
+		}	
 	}
 	
 	private void sendBinary(WebSocketSession session, byte[] foto) throws JSONException, IOException {

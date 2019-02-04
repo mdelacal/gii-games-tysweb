@@ -45,9 +45,9 @@
                     </div>
                     <div>
                         <div class="contenedor">
-                            <a title="Piedra" href=""><img src="images/piedra.jpg" style="width: 32%;height: 32%;padding-right: 1rem;"></a>
-                            <a title="Papel" href=""><img src="images/papel.jpg" style="width: 32%;height: 32%;padding-right: 1rem;"></a>
-                            <a title="Tijera" href=""><img src="images/tijera.jpg" style="width: 32%;height: 32%;padding-right: 1rem;"></a>
+                            <a title="Piedra" href="javascript:move(0)"><img src="images/piedra.jpg" style="width: 32%;height: 32%;padding-right: 1rem;"></a>
+                            <a title="Papel" href="javascript:move(1)"><img src="images/papel.jpg" style="width: 32%;height: 32%;padding-right: 1rem;"></a>
+                            <a title="Tijera" href="javascript:move(2)"><img src="images/tijera.jpg" style="width: 32%;height: 32%;padding-right: 1rem;"></a>
                         </div>
                     </div>
                     <div>
@@ -90,7 +90,7 @@
         </div>
     </div>
 </div>
-    
+    <div id="textosRecibidos"></div>
 <div id="dropDownSelect1"></div>
 	
 	<li style="display:none" id="chatDeJugadores" class="left clearfix"> 
@@ -116,6 +116,26 @@
     <script>
     var ws={};
     
+    function joinGame(gameName){
+		var request=new XMLHttpRequest();
+		request.open("GET", "http://localhost:8080/joinGame?gameName="+gameName);
+		request.onreadystatechange = function() {
+			if(request.readyState==4) 
+				add(request.responseText);
+			var ws=new WebSocket("ws://localhost:8080/gamews");
+			ws.onerror=function(){
+				add("Error al conectar el WS");
+			}
+		};
+		request.send();
+	}
+    
+    function add(texto){
+		var div=document.createElement("div");
+		textosRecibidos.appendChild(div);
+		div.innerHTML=texto;
+	}
+    
     function enviarMensaje(){
     	if (document.getElementById("msg").value!="") {
     		var p = {
@@ -128,6 +148,14 @@
     	}
     }
     
+    function move(coordinate){
+		var p = {
+			TYPE : "MOVIMIENTO",
+			coordinate : [coordinate]
+		};
+		ws.send(JSON.stringify(p));
+	}
+    
     function conectarWS(){
     	if (window.WebSocket==undefined) {
     		alert("Lo sentimos, pero tu navegador no soporta este tipo de comunicación");
@@ -136,6 +164,8 @@
     	
     	var url = "ws://localhost:8080/gamews";
     	ws=new WebSocket(url);	
+    	
+    	joinGame('Piedra, papel, tijera');
     	
     	ws.onmessage = function(datos) {
     		var mensaje=datos.data;
@@ -154,7 +184,7 @@
                 var chatjugadores = document.getElementById("chatjugadores");
                 chatjugadores.scrollTop = chatjugadores.scrollHeight;
                 
-    		}else if (mensaje.TYPE == "FOTO") {
+    		}else if (mensaje.TYPE == "MOVIMIENTO") {
     			
             }
     	}	

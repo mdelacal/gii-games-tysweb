@@ -23,7 +23,7 @@ public class PPTBoard extends Board {
 		if(this.match.getPlayers().get(0)==player) {
 			pos=rellenar(tiradas0, coordinates[0]);
 		}else {
-			pos=rellenar(tiradas1, coordinates[1]);
+			pos=rellenar(tiradas1, coordinates[0]);
 		}
 		if(tiradas0[pos]!=-1 && tiradas1[pos]!=-1) { //la ronda ya ha terminado
 			System.out.println(tiradas0 + "\n" + tiradas1);
