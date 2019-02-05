@@ -27,6 +27,7 @@ public abstract class Game {
 			match=createMatch();
 			match.addPlayer(player);
 			pendingMatches.add(match);
+			WSServer.send(match.getPlayers(), match);
 		} else {
 			match=this.pendingMatches.get(0);
 			match.addPlayer(player);
