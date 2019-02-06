@@ -95,4 +95,10 @@ public class PPTBoard extends Board {
 		return true;		
 	}
 
+	@Override
+	public boolean win(Player player) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

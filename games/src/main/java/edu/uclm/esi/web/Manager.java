@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import org.json.JSONArray;
 
 import edu.uclm.esi.games.ppt.PPT;
+import edu.uclm.esi.games.sudoku.Sudoku;
 import edu.uclm.esi.games.Game;
 import edu.uclm.esi.games.Match;
 import edu.uclm.esi.games.Player;
@@ -18,6 +19,10 @@ public class Manager {
 		games=new Hashtable<>();
 		Game tictactoe=new TictactoeGame();
 		games.put(tictactoe.getName(), tictactoe);
+		
+		Game sudoku=new Sudoku();
+		games.put(sudoku.getName(), sudoku);
+		
 		Game ppt = new PPT();
 		games.put(ppt.getName(), ppt);
 	}
@@ -33,6 +38,7 @@ public class Manager {
 	public Match joinGame(Player player, String gameName) {
 		Game game=this.games.get(gameName);
 		return game.getMatch(player);
+
 	}
 
 	public JSONArray getGames() {

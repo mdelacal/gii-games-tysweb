@@ -103,10 +103,6 @@
     <script>
     var ws={};
     
-    function unirse(){
-    	joinGame('Piedra, papel, tijera');
-    }
-    
     function joinGame(gameName){
 		var request=new XMLHttpRequest();
 		request.open("GET", "http://localhost:8080/joinGame?gameName="+gameName);
