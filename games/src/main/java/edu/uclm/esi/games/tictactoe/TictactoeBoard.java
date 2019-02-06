@@ -110,4 +110,10 @@ public class TictactoeBoard extends Board {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public void moveSudoku(Player player, int[] coordinates, int valor) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }

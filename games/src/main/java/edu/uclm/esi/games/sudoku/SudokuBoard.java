@@ -8,29 +8,27 @@ import edu.uclm.esi.games.Match;
 import edu.uclm.esi.games.Player;
 
 public class SudokuBoard extends Board {
-	//private static int[][] tablero;
-	//private static int[][] solucion;
-	private int[] tableroinicial;
+	private int[] tableroinicial0;
+	private int[] tableroinicial1;
 	private int[] tablerofinal;
 
 	public SudokuBoard(SudokuMatch sudokumatch) {
 		super(sudokumatch);
-		this.tableroinicial = generar_Inicial();
+		this.tableroinicial0 = generar_Inicial();
+		this.tableroinicial1 = generar_Inicial();
 		this.tablerofinal = resolver();
-		
-		
-		/*
-		boolean generado = false;
-		int[][] sudoku;
-		do {
-			sudoku = generarSudoku();
-			generado = resolver(sudoku);
-		} while (!generado);
-		solucion = sudoku;
-		tablero = generarInicial();
-		*/
-		//this.tablerofinal = solucion;
-		//this.tableroinicial = tablero;
+	}
+	
+	public int[] gettableroinicial0(){
+		return tableroinicial0;
+	}
+	
+	public int[] gettableroinicial1(){
+		return tableroinicial1;
+	}
+	
+	public int[] gettablerofinal(){
+		return tablerofinal;
 	}
 	
 	public int [] generar_Inicial(){
@@ -56,6 +54,7 @@ public class SudokuBoard extends Board {
 	    
 	    return sudoku;
 	  }
+	
 	public int [] resolver(){
 	    int [] sudoku = new int[81];
 	    sudoku[0]=1;
@@ -153,32 +152,31 @@ public class SudokuBoard extends Board {
 	    return sudoku;
 	  }
 	
-	public int[] gettableroinicial(){
-		return tableroinicial;
-	}
-	
-	public int[] gettablerofinal(){
-		return tablerofinal;
-	}
 	
 	@Override
 	public void move(Player player, int[] coordinates) throws Exception {
-		//int row = coordinates[0];
-		//int col = coordinates[1];
-		//tablero[row][col] = coordinates[3];
-		tableroinicial[coordinates[0]] = coordinates[1];
+
+	}
+	
+	@Override
+	public void moveSudoku(Player player, int[] coordinates, int valor) throws Exception {
+		if(this.match.getPlayers().get(0)==player) {
+			tableroinicial0[coordinates[0]] = valor;
+		}else {
+			tableroinicial1[coordinates[0]] = valor;
+		}
+		//tableroinicial0[coordinates[0]] = valor; 	
 	}
 /*
 	@Override
 	public boolean win(Player player) {
 		return ((SudokuBoard) player.getCurrentMatch().getBoard()).esCorrecto();
 	}
-
+*/
 	@Override
 	public Player getWinner() {
 		for (Player player : this.match.getPlayers()) {
-			if (player.getCurrentMatch().getBoard().end()
-					&& ((SudokuBoard) player.getCurrentMatch().getBoard()).esCorrecto())
+			if (((SudokuBoard) player.getCurrentMatch().getBoard()).esCorrecto())
 				return player;
 		}
 		return null;
@@ -188,122 +186,19 @@ public class SudokuBoard extends Board {
 	public boolean end() {
 		if (this.getWinner() != null)
 			return true;
-		return sudokuEnd();
+		return false;
 	}
 
 	public boolean esCorrecto() {
-		for (int i = 0; i < 9; i++)
-			for (int j = 0; j < 9; j++)
-				//if (tablero[i][j] != solucion[i][j])
-				if (tableroinicial[i][j] != tablerofinal[i][j])
-					return false;
-		return true;
-	}
-
-	private boolean sudokuEnd() {
-		for (int i = 0; i < 9; i++)
-			for (int j = 0; j < 9; j++)
-				//if (tablero[i][j] == 0)
-				if (tableroinicial[i][j] == 0)
-					return false;
-		return true;
-	}
-*/
-	public boolean esPosibleInsertar(int[][] tablero, int i, int j, int valor) {
-		// Comprueba columna
-		for (int a = 0; a < 9; a++) {
-			if (a != i && tablero[a][j] == valor) {
+		for (int i = 0; i < 81; i++)
+			if (tableroinicial0[i] != tablerofinal[i])
 				return false;
-			}
-		}
-		// Comprueba fila
-		for (int a = 0; a < 9; a++) {
-			if (a != j && tablero[i][a] == valor) {
-				return false;
-			}
-		}
-		// Comprueba cuadardo
-		int y = (i / 3) * 3;
-		int x = (j / 3) * 3;
-		for (int a = 0; a < 9 / 3; a++) {
-			for (int b = 0; b < 9 / 3; b++) {
-				if (a != i && b != j && tablero[y + a][x + b] == valor) {
-					return false;
-				}
-			}
-		}
 		return true;
-	}
-
-	public int[][] generarSudoku() {
-
-		int[][] sudok = new int[9][9];
-		for (int i = 0; i < sudok.length; i++) {
-			for (int j = 0; j < sudok[1].length; j++) {
-				int ale = (int) (Math.random() * 10);
-				if (ale == 5) {
-					sudok[i][j] = (int) (Math.random() * 9) + 1;
-				} else {
-					sudok[i][j] = 0;
-				}
-			}
-
-		}
-		return sudok;
-	}
-
-	public boolean resolver(int[][] tablero) {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				if (tablero[i][j] != 0) {
-					continue;
-				}
-				for (int k = 1; k <= 9; k++) {
-					if (esPosibleInsertar(tablero, i, j, k)) {
-						tablero[i][j] = k;
-						boolean b = resolver(tablero);
-						if (b) {
-							return true;
-						}
-						tablero[i][j] = 0;
-					}
-				}
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public static int[][] generarInicial() {
-		int[][] inicial = new int[9][9];
-		Random r = new Random();
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				if (r.nextInt(10) <= 3) {
-					//inicial[i][j] = solucion[i][j];
-				}
-			}
-		}
-		return inicial;
-
 	}
 
 	@Override
 	public boolean win(Player player) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
-	@Override
-	public Player getWinner() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean end() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 }

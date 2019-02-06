@@ -88,10 +88,22 @@ public class WSServer extends TextWebSocketHandler {
 			JSONArray coordinates = jso.getJSONArray("coordinate");
 			Match match = Manager.get().move(player, coordinates);
 			send(match.getPlayers(), match);
-		}
 		
+		//si se cambia una celda en el sudoku
+		}else if(jso.get("TYPE").equals("SUDOKU")) {
+			Player player = (Player) session.getAttributes().get("player");
+			JSONArray celda = jso.getJSONArray("coordinate");
+			int valor = jso.getInt("value");
+			
+			jso.put("player", jso.get("player"));
+			
+			Match match = Manager.get().moveSudoku(player, celda, valor);
+			sendMoveSudoku(player, celda, valor, match);		
+		}	
 	}
 	
+	
+
 	@Override
 	protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message){
 		Player player = (Player) session.getAttributes().get("player");
@@ -134,5 +146,28 @@ public class WSServer extends TextWebSocketHandler {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	private void sendMoveSudoku(Player player, JSONArray celda, int valor, Match match) {
+		//enviar movimiento de ese jugador en su partida
+		ObjectMapper mapper=new ObjectMapper();
+		JSONObject jso;
+		try {
+			jso = new JSONObject(mapper.writeValueAsString(match));
+			jso.put("TYPE", "MOVIMIENTOSUDOKU");
+			
+			int[] iC=new int[celda.length()];
+			iC[0]=celda.getInt(0);
+			jso.put("celda", iC[0]);
+			jso.put("valor", valor);
+			jso.put("match", match);
+			
+			WebSocketSession session=sessionsByPlayer.get(player.getUserName());
+			WebSocketMessage<?> message=new TextMessage(jso.toString());
+			session.sendMessage(message);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

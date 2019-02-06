@@ -64,6 +64,26 @@ public abstract class Match {
 		
 		return this;
 	}
+	
+	public Match moveSudoku(Player player, int[] celda, int valor) throws Exception {
+
+		//comprobar si la partida ha terminado
+		if(this.board.end())
+			throw new Exception("The match is finished");
+		
+		//si antes no hay fallos hacemos el movimiento
+		this.board.moveSudoku(player, celda, valor);
+
+		
+		//vemos quien ha ganado
+		this.winner=this.board.getWinner();
+		
+		//si la partida ha terminado guardamos el resultado en la tabla RESULT de la base de datos
+		if(this.board.end())
+			save();
+		
+		return this;
+	}
 
 	protected abstract void save() throws Exception;
 

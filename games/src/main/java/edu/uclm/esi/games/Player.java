@@ -123,6 +123,10 @@ public class Player {
 	public Match move(int[] coordinates) throws Exception {
 		return this.currentMatch.move(this, coordinates);
 	}
+	
+	public Match moveSudoku(int[] celda, int valor) throws Exception {
+		return this.currentMatch.moveSudoku(this, celda, valor);
+	}
 
 	public static Player solicitarToken(String userName) {
 		Player player = null;

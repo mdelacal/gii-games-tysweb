@@ -49,12 +49,19 @@ public class Manager {
 		return jsa;
 	}
 	
-	//movimiento del player con las coordinates
+	//movimiento del player con las coordinates para el PPT
 	public Match move(Player player, JSONArray coordinates) throws Exception {
 		int[] iC=new int[coordinates.length()];
 		for(int i=0;i<iC.length;i++) 
 			iC[i]=coordinates.getInt(i);
 		return player.move(iC);
+	}
+	
+	//movimiento del player con la celda y el valor para el Sudoku
+	public Match moveSudoku(Player player, JSONArray celda, int valor) throws Exception {
+		int[] iC=new int[celda.length()];
+		iC[0]=celda.getInt(0);
+		return player.moveSudoku(iC, valor);
 	}
 
 }
