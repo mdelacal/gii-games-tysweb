@@ -97,7 +97,14 @@ public class Player {
 		return existeUsername || existeEmail;
 	}
 
-	// new
+	/**
+	 * Metodo que registra a un usuario con cuenta de Google
+	 * @param id: id del perfil de Google
+	 * @param nombre: nombre de la cuenta de Google
+	 * @param email: email de la cuenta de Google
+	 * @return
+	 * @throws Exception
+	 */
 	public static Player registerGoogle(String id, String nombre, String email) throws Exception {
 		Player player = new Player();
 		player.setEmail(email);

@@ -15,4 +15,7 @@ public abstract class Board {
 	public abstract boolean win(Player player);
 	public abstract Player getWinner();
 	public abstract boolean end();
+
+	
+
 }

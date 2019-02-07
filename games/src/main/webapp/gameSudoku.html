@@ -1159,6 +1159,7 @@
     <script>
     var ws = {};
 
+    //unirse a una partida
     function joinGame(gameName) {
         var request = new XMLHttpRequest();
         request.open("GET", "http://localhost:8080/joinGame?gameName=" + gameName);
@@ -1170,12 +1171,14 @@
         request.send();
     }
 
+    //agrega info sobre la partida
     function add(texto) {
         var div = document.createElement("div");
         textosRecibidos.appendChild(div);
         div.innerHTML = texto;
     }
 
+    //envia un mensaje por el chat de jugadores
     function enviarMensaje() {
         if (document.getElementById("msg").value != "") {
             var p = {
@@ -1188,6 +1191,7 @@
         }
     }
 
+    //cambiar el numero de una casilla del sudoku
     function move(coordinate) {
         var p = {
             TYPE: "SUDOKU",
@@ -1198,6 +1202,7 @@
         ws.send(JSON.stringify(p));
     }
     
+    //muestra el sudoku inicial en el html
     function sudokuinicialhtml(sudoku){
     	var i;
     	for(i=0; i<81; i++){
@@ -1209,6 +1214,7 @@
 		}
     }
     
+    //comprueba si el cambio en la celda es correcto, mostrando un background rojo/verde y desactiva el elemento
     function comprobarCelda(celda, valor, tablerofinal){
     	var cell = "cell-" + celda;
 		var element = document.getElementById(cell);
@@ -1220,6 +1226,7 @@
     	}
     }
 
+    //conexion con el WS y gestion de mensajes recibidos
     function conectarWS() {
         if (window.WebSocket == undefined) {
             alert("Lo sentimos, pero tu navegador no soporta este tipo de comunicación");
@@ -1264,11 +1271,25 @@
                 }
             //si se ha hecho un movimiento en el sudoku
             } else if (mensaje.TYPE == "MOVIMIENTOSUDOKU") {
-            	comprobarCelda(mensaje.celda, mensaje.valor, mensaje.board.tablerofinal);
+            	//si todavia no hay ganador comprobamos la celda
+            	if (mensaje.winner==null){
+            		comprobarCelda(mensaje.celda, mensaje.valor, mensaje.board.tablerofinal);
+            	}
+            	//si hay ganador final de la partida
+            	else if (mensaje.winner!=null){
+    				//hacemos la comprobacion de la ultima celda en el ganador
+            		if(mensaje.winner.userName == sessionStorage.getItem("userName"))
+    					comprobarCelda(mensaje.celda, mensaje.valor, mensaje.board.tablerofinal);
+            		//notificamos a los players del final de la partida
+    				add("-------------------")
+    				add("FIN DE LA PARTIDA!!");
+    				add("Ganador: " + mensaje.winner.userName);
+    			}  	
             }
         }
     }
 
+    //si se ha iniciado sesión se unirá a una partida de SUDOKU
     if (sessionStorage.getItem('userName') != null) {
         joinGame('Sudoku');
     }

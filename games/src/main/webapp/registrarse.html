@@ -91,7 +91,6 @@
 	<script src="js/main.js"></script>
 	
 	<script>
-	//new angular
 	var app=angular.module("GameApp", []);
 	app.controller("GameController", function($scope, $http) {
 		$scope.userName="";
@@ -113,11 +112,9 @@
 			};
 			$http.post(recurso, data, config).then(
 					function(respuesta) {		
-						//mensajeRegistro.innerHTML="Registro OK";
 						alert('Registro OK');
 					},
 					function(respuesta) {
-						//mensajeRegistro.innerHTML=respuesta.data.message;
 						alert('Error');
 					}
 			);

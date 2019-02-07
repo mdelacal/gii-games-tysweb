@@ -80,11 +80,6 @@
 							Regístrate						
 						</a>
 					</div>
-	
-					<a href="http://localhost:8080/solicitarToken?userName=miguelcal97" class="text-center w-full p-t-42">Solicitar token</a>			
-					<a href="post/index.html" class="text-center w-full">Ir a ejemplos con JSON, POST y jQuery</a><br>
-					<a href="angular/index.html" class="text-center w-full">Ir a ejemplos con JSON, POST y Angular</a><br>
-					<a href="indexppt.html" class="text-center w-full">Piedra, papel, tijera</a>
 				</form>
 			</div>
 		</div>
@@ -101,21 +96,16 @@
 	<script src="js/main.js"></script>
 	
 	<script>
-	//new
+	//inicia sesion con la cuenta de Google
 	function onSignIn(googleUser) {
 	  	var profile = googleUser.getBasicProfile();
 	  	registrarOLoguear(profile.getId(), profile.getName(), profile.getEmail());
 	  	crearCookieGoogle(profile.getName(), profile.getEmail(), profile.getImageUrl());
 	  	alert('Registro/Login google OK');
 	  	window.location.href = "menu.html";
-	  	
-	  	//console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-	  	//console.log('Name: ' + profile.getName());
-	  	//console.log('Image URL: ' + profile.getImageUrl());
-	  	//console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 	}
 	
-	//new
+	//registra o te loguea con una cuenta de Google
 	function registrarOLoguear(idGoogle, nombre, email){
 		var req=new XMLHttpRequest();
 		req.open("POST", "registrarOLoguear");
@@ -158,7 +148,6 @@
 		
 	}
 	
-	//new angular
 	var app=angular.module("GameApp", []);
 	app.controller("GameController", function($scope, $http) {
 		$scope.userName="";
@@ -176,13 +165,11 @@
 			};
 			$http.post(recurso, data, config).then(
 				function(response) {
-					//$scope.loadGames();
 					crearCookie();
 					sessionStorage.userName=response.data.userName;
 					sessionStorage.email=response.data.email;
 					alert('Login OK');
 					window.location.href = "menu.html"; 
-					//$scope.conectar();
 				},
 				function(response) {
 					alert("Error");

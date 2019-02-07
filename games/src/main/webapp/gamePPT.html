@@ -103,6 +103,7 @@
     <script>
     var ws={};
     
+    //unirse a una partida
     function joinGame(gameName){
 		var request=new XMLHttpRequest();
 		request.open("GET", "http://localhost:8080/joinGame?gameName="+gameName);
@@ -114,12 +115,14 @@
 		request.send();
 	}
     
+    //agrega info sobre la partida
     function add(texto){
 		var div=document.createElement("div");
 		textosRecibidos.appendChild(div);
 		div.innerHTML=texto;
 	}
     
+    //envia un mensaje por el chat de jugadores
     function enviarMensaje(){
     	if (document.getElementById("msg").value!="") {
     		var p = {
@@ -132,6 +135,7 @@
     	}
     }
     
+    //envia un movimiento de PPT
     function move(coordinate){
 		var p = {
 			TYPE : "MOVIMIENTO",
@@ -140,6 +144,7 @@
 		ws.send(JSON.stringify(p));
 	}
     
+    //conexion con el WS y gestion de mensajes recibidos
     function conectarWS(){
     	if (window.WebSocket==undefined) {
     		alert("Lo sentimos, pero tu navegador no soporta este tipo de comunicación");
@@ -170,7 +175,8 @@
             
             //si se recibe un mensaje de la partida  
     		}else if (mensaje.TYPE == "MATCH") {
-    			var eleccion = -1;
+    			var eleccion0 = -1;
+    			var eleccion1 = -1;
     			var i;
     			
     			//mensajes cuando todavía no ha empezado la partida
@@ -182,44 +188,52 @@
     				add(mensaje.players[1].userName + " se ha unido a la partida");
     				add("COMIENZA LA PARTIDA!!");
 					add(mensaje.players[0].userName + " VS " + mensaje.players[1].userName);
+					add("----- RONDA " + ronda++ + " -----");
     				add("Primer turno para: " + mensaje.players[0].userName);
     			}
 	
-    			//jugador que primero se unio a la partida
+    			//mostrar turnos y resultados de cada ronda
     			if(mensaje.currentPlayer=="0"){
-    				for(i=0; i<3; i++){
-    					if(mensaje.board.tiradas0[i]!=-1){
-    						eleccion = mensaje.board.tiradas0[i];
-    					}
-    				}
-    				
-    				if(eleccion==0)
-    					eleccion="PIEDRA";
-    				else if(eleccion==1)
-    					eleccion="PAPEL";
-    				else if(eleccion==2)
-    					eleccion="TIJERA";
-    							
-    				add("----- RONDA " + ronda++ + " -----");
-    				add(mensaje.players[0].userName + " ha seleccionado " + eleccion);
+    				add("Ahora es turno de: " + mensaje.players[1].userName);
     			}
-    			//jugador rival que completo la partida	
+    			//mostrar resultados de cada ronda
     			else if(mensaje.currentPlayer=="1"){
     				for(i=0; i<3; i++){
+    					if(mensaje.board.tiradas0[i]!=-1){
+    						eleccion0 = mensaje.board.tiradas0[i];
+    					}
+    				}
+    				for(i=0; i<3; i++){
     					if(mensaje.board.tiradas1[i]!=-1){
-    						eleccion = mensaje.board.tiradas1[i];
+    						eleccion1 = mensaje.board.tiradas1[i];
     					}
     				}
     				
-    				if(eleccion==0)
-    					eleccion="PIEDRA";
-    				else if(eleccion==1)
-    					eleccion="PAPEL";
-    				else if(eleccion==2)
-    					eleccion="TIJERA";
+    				if(eleccion0==0)
+    					eleccion0="PIEDRA";
+    				else if(eleccion0==1)
+    					eleccion0="PAPEL";
+    				else if(eleccion0==2)
+    					eleccion0="TIJERA";
     				
-    				add(mensaje.players[1].userName + " ha seleccionado " + eleccion);
+    				if(eleccion1==0)
+    					eleccion1="PIEDRA";
+    				else if(eleccion1==1)
+    					eleccion1="PAPEL";
+    				else if(eleccion1==2)
+    					eleccion1="TIJERA";
+		
+    				
+    				add(mensaje.players[0].userName + " ha seleccionado " + eleccion0);
+    				add(mensaje.players[1].userName + " ha seleccionado " + eleccion1);
+    				
+    				if(ronda<=3){
+    					add("----- RONDA " + ronda++ + " -----");
+        				add("Primer turno para: " + mensaje.players[0].userName);
+    				}
+    				
     			}
+    			
 				//ganador final de la partida
     			if (mensaje.winner!=null){
     				add("-------------------")

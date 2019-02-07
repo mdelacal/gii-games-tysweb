@@ -94,14 +94,11 @@ public class WSServer extends TextWebSocketHandler {
 			Player player = (Player) session.getAttributes().get("player");
 			JSONArray celda = jso.getJSONArray("coordinate");
 			int valor = jso.getInt("value");
-			
-			jso.put("player", jso.get("player"));
-			
+			jso.put("player", jso.get("player"));	
 			Match match = Manager.get().moveSudoku(player, celda, valor);
 			sendMoveSudoku(player, celda, valor, match);		
 		}	
 	}
-	
 	
 
 	@Override
@@ -116,6 +113,13 @@ public class WSServer extends TextWebSocketHandler {
 		}	
 	}
 	
+	/**
+	 * Metodo que envia la foto
+	 * @param session: sesion que solicita la foto
+	 * @param foto: recurso solicitado en bytes
+	 * @throws JSONException
+	 * @throws IOException
+	 */
 	private void sendBinary(WebSocketSession session, byte[] foto) throws JSONException, IOException {
 		//enviar la foto
 		String imagen = Base64.encode(foto);
@@ -130,6 +134,11 @@ public class WSServer extends TextWebSocketHandler {
 		}	
 	}
 	
+	/**
+	 * Metodo que envia el MOVIMIENTO de una partida PPT a todos los players
+	 * @param players: jugadores que estan jugando al PPT
+	 * @param match: partida PPT donde estan los players
+	 */
 	public static void send(Vector<Player> players, Match match) {
 		//enviar mensaje a los players de ese match
 		ObjectMapper mapper=new ObjectMapper();
@@ -138,6 +147,7 @@ public class WSServer extends TextWebSocketHandler {
 			jso = new JSONObject(mapper.writeValueAsString(match));
 			jso.put("TYPE", "MATCH");
 			for(Player player : players) {
+				Thread.sleep(1000);
 				WebSocketSession session=sessionsByPlayer.get(player.getUserName());
 				WebSocketMessage<?> message=new TextMessage(jso.toString());
 				session.sendMessage(message);
@@ -148,6 +158,13 @@ public class WSServer extends TextWebSocketHandler {
 		
 	}
 	
+	/**
+	 * Metodo que envia el MOVIMIENTO en una partida de SUDOKU
+	 * @param player: jugador que cambia una celda del sudoku
+	 * @param celda: casilla del sudoku que cambia
+	 * @param valor: valor nuevo en la casilla
+	 * @param match: partida donde esta el player
+	 */
 	private void sendMoveSudoku(Player player, JSONArray celda, int valor, Match match) {
 		//enviar movimiento de ese jugador en su partida
 		ObjectMapper mapper=new ObjectMapper();
@@ -155,17 +172,26 @@ public class WSServer extends TextWebSocketHandler {
 		try {
 			jso = new JSONObject(mapper.writeValueAsString(match));
 			jso.put("TYPE", "MOVIMIENTOSUDOKU");
-			
+			jso.put("match", match);	
 			int[] iC=new int[celda.length()];
 			iC[0]=celda.getInt(0);
 			jso.put("celda", iC[0]);
 			jso.put("valor", valor);
-			jso.put("match", match);
 			
-			WebSocketSession session=sessionsByPlayer.get(player.getUserName());
-			WebSocketMessage<?> message=new TextMessage(jso.toString());
-			session.sendMessage(message);
-			
+			//si hay ganador le mandamos un mensaje a los 2 players
+			if(match.getWinner()!=null) {
+				Vector<Player> players = match.getPlayers();
+				for(Player p : players) {
+					WebSocketSession session=sessionsByPlayer.get(p.getUserName());
+					WebSocketMessage<?> message=new TextMessage(jso.toString());
+					session.sendMessage(message);
+				}
+			//si no hay ganador se envia el movimiento de ese player
+			}else {	
+				WebSocketSession session=sessionsByPlayer.get(player.getUserName());
+				WebSocketMessage<?> message=new TextMessage(jso.toString());
+				session.sendMessage(message);
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -50,12 +50,12 @@ public abstract class Match {
 		if(this.board.end())
 			throw new Exception("The match is finished");
 		
-		//si antes no hay fallos hacemos el movimiento
+		//si antes no hay fallos hacemos el movimiento PPT
 		this.board.move(player, coordinates);
 		//y cambiamos el current player
 		this.currentPlayer=(this.currentPlayer+1)%this.players.size();
 		
-		//vemos quien ha ganado
+		//vemos quien ha ganado, si es que ya hay ganador
 		this.winner=this.board.getWinner();
 		
 		//si la partida ha terminado guardamos el resultado en la tabla RESULT de la base de datos
@@ -71,11 +71,10 @@ public abstract class Match {
 		if(this.board.end())
 			throw new Exception("The match is finished");
 		
-		//si antes no hay fallos hacemos el movimiento
+		//si no ha terminado la partida hacemos el movimiento en el sudoku
 		this.board.moveSudoku(player, celda, valor);
 
-		
-		//vemos quien ha ganado
+		//vemos quien ha ganado, si es que ya hay ganador
 		this.winner=this.board.getWinner();
 		
 		//si la partida ha terminado guardamos el resultado en la tabla RESULT de la base de datos

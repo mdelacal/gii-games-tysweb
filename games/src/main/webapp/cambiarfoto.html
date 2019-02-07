@@ -70,7 +70,6 @@
             var blobReader = new FileReader();
             blobReader.onload = function(event) {
                 var buffer = event.target.result;
-                //$scope.ws.send(buffer);
                 chat.send(buffer);
             };
             blobReader.readAsArrayBuffer(blob);
@@ -81,9 +80,9 @@
     app.controller("GameController", function($scope, $http) {
         $scope.userName = "";
         $scope.pwd = "";
-        $scope.pwd1 = ""; //new
-        $scope.pwd2 = ""; //new
-        $scope.email = ""; //new
+        $scope.pwd1 = ""; 
+        $scope.pwd2 = ""; 
+        $scope.email = ""; 
         $scope.estado = "Desconectado";
         $scope.opponentName = "Waiting for an opponent...";
         $scope.game = new Game();
@@ -98,13 +97,13 @@
                 blobReader.onload = function(event) {
                     var buffer = event.target.result;
                     $scope.ws.send(buffer);
-                    //chat.send(buffer);
                 };
                 blobReader.readAsArrayBuffer(blob);
                 window.location.href = "menu.html";
             }
             reader.readAsArrayBuffer(file);
         }
+        
         //cargar imagen/username/email
         var conectar = function() {
             $scope.userName = "";
@@ -118,16 +117,14 @@
                 $scope.$apply($scope.estado = "Conectado");
             }
             $scope.ws.onmessage = function(mensaje) {
-                var data = mensaje.data; //new aqui viene la cadena json que recibo del servidor
-                data = JSON.parse(data); //new la convierto a json
-                if (data.TYPE == "MATCH") { //new
+                var data = mensaje.data; 
+                data = JSON.parse(data); 
+                if (data.TYPE == "MATCH") { 
                     if (data.currentPlayer != -1)
                         $scope.$apply($scope.estado = "Partida comenzada");
                 } else if (data.TYPE == "FOTO") {
                     imgFoto.src = "data:image/jpeg;base64," + data.foto;
                 }
-                //$scope.$apply($scope.estado=mensaje.data);
-                //console.log(mensaje.data);
                 console.log(sessionStorage.getItem('email'));
                 console.log(sessionStorage.getItem('userName'));
             }
