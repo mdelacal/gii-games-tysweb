@@ -61,7 +61,7 @@ public class SudokuBoard extends Board {
 	//SUDOKU FACIL PARA PRUEBAS
 	public int [] generar_Inicial(){
 	    int [] sudoku = new int[81];
-	    sudoku[0]=1;
+	    sudoku[0]=0;
 	    sudoku[1]=0;
 	    sudoku[2]=2;
 	    sudoku[3]=9;
