@@ -42,16 +42,27 @@ public class PPTBoard extends Board {
 		return -1;
 	}
 	
-	//devuelve el player ganador
+	//devuelve el player ganador, si lo hay
 	private Player gana(int[] a, int[] b) { 
 		int victoriasA=0, victoriasB=0;
+		Player ganador = null;
+		//ganador de cada ronda
 		for(int i=0; i<a.length; i++) {
-			if(gana(a[i], b[i]))
+			if(a[i]==b[i]) {
+				// EMPATE
+			}
+			else if(gana(a[i], b[i]))
 				victoriasA++;
 			else
 				victoriasB++;
 		}
-		return victoriasA>victoriasB ? this.match.getPlayers().get(0) : this.match.getPlayers().get(1);
+		//ganador de la partida
+		if(victoriasA>victoriasB)
+			ganador=this.match.getPlayers().get(0);
+		else if(victoriasB>victoriasA)
+			ganador=this.match.getPlayers().get(0);
+
+		return ganador;
 	}
 	
 	//obtener el ganador de la partida
@@ -86,12 +97,13 @@ public class PPTBoard extends Board {
 	@Override
 	public boolean end() {
 		//comprobar si la partida ha terminado
-		if(this.getWinner()!=null)
-			return true;
+		//if(this.getWinner()!=null)
+		//	return true;
 		for(int i=0; i<tiradas0.length; i++) {
 			if(tiradas0[i]==-1 || tiradas1[i]==-1)
 				return false;
 		}
+		//si se han completado todas las tiradas la partida ha terminado
 		return true;		
 	}
 

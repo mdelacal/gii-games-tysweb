@@ -239,7 +239,13 @@
     				add("-------------------")
     				add("FIN DE LA PARTIDA!!");
     				add("Ganador: " + mensaje.winner.userName);
-    			}  			
+    			}  
+				//si hay empate
+    			else if (mensaje.winner==null && mensaje.board.tiradas0[2]!=-1 && mensaje.board.tiradas1[2]!=-1){
+    				add("-------------------")
+    				add("FIN DE LA PARTIDA!!");
+    				add("La partida ha terminado en EMPATE!");
+    			}
             }
     	}	
     }

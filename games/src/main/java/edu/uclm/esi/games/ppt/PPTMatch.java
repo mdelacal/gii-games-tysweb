@@ -25,9 +25,18 @@ public class PPTMatch extends Match {
 	
 	@Override
 	protected void save() throws Exception{
+		Result result;
 		//guardamos el resultado de la partida en la tabla RESULT de la base de datos 
-		Result result=new Result(this.getPlayers().get(0).getUserName(), this.getPlayers().get(1).getUserName(),
+		//no hay winner
+		if(this.winner==null) {
+			result=new Result(this.getPlayers().get(0).getUserName(), this.getPlayers().get(1).getUserName(), null);
+		}
+		//hay winner
+		else {
+			result = new Result(this.getPlayers().get(0).getUserName(), this.getPlayers().get(1).getUserName(),
 				this.winner.getUserName());
+		}
+			
 		MongoBroker.get().insert(result);
 	}
 
