@@ -234,17 +234,22 @@
     				
     			}
     			
-				//ganador final de la partida
-    			if (mensaje.winner!=null){
+    			if(mensaje.board.tiradas0[2]!=-1 && mensaje.board.tiradas1[2]!=-1){
+    				//notificamos a los players del final de la partida
     				add("-------------------")
     				add("FIN DE LA PARTIDA!!");
-    				add("Ganador: " + mensaje.winner.userName);
-    			}  
-				//si hay empate
-    			else if (mensaje.winner==null && mensaje.board.tiradas0[2]!=-1 && mensaje.board.tiradas1[2]!=-1){
-    				add("-------------------")
-    				add("FIN DE LA PARTIDA!!");
-    				add("La partida ha terminado en EMPATE!");
+    				
+    				//ganador final de la partida
+    				if (mensaje.winner!=null){
+    					alert("La partida ha terminado. Se volverá al menú principal.\nGanador: " + mensaje.winner.userName);
+    				}
+    				//si hay empate
+    				else if(mensaje.winner==null){
+    					alert("La partida ha terminado. Se volverá al menú principal.\nGanador: EMPATE");
+    				}
+    				
+    				//regresamos al menu principal
+    				window.location.href = "menu.html";
     			}
             }
     	}	

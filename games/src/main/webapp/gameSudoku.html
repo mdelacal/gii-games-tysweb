@@ -1,46 +1,51 @@
 <!doctype html>
 <html lang="en">
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script src="angular/Game.js"></script>
 
 <head>
-    <title>Sudoku</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--===============================================================================================-->
-    <link rel="icon" type="image/png" href="images/icons/favicon.ico" />
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="css/util.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-    <!--===============================================================================================-->
-    <style type="text/css">
-    html,
-    body {
-        background-color: #FAFAFA
-    }
+<title>Sudoku</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+<link rel="icon" type="image/png" href="images/icons/favicon.ico" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css"
+	href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css"
+	href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css"
+	href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css"
+	href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css"
+	href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href="css/util.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+<style type="text/css">
+html, body {
+	background-color: #FAFAFA
+}
 
-    table {
-        border: 2px solid #000000;
-    }
+table {
+	border: 2px solid #000000;
+}
 
-    td {
-        border: 1px solid #000000;
-        text-align: center;
-        vertical-align: middle;
-    }
-    /*
+td {
+	border: 1px solid #000000;
+	text-align: center;
+	vertical-align: middle;
+}
+/*
     input {
         color: #000000;
         padding: 0;
@@ -52,1113 +57,137 @@
         background-color: #FFFFFF;
         outline: none;
     }*/
+input:disabled {
+	background-color: #EEEEEE;
+}
 
-    input:disabled {
-        background-color: #EEEEEE;
-    }
+#cell-0, #cell-1, #cell-2, #cell-3, #cell-4, #cell-5, #cell-6, #cell-7, #cell-8,#cell-27, #cell-28, #cell-29,
+#cell-30, #cell-31, #cell-32,  #cell-33, #cell-34, #cell-35, #cell-54, #cell-55, #cell-56, #cell-57, #cell-58, #cell-59,
+#cell-60, #cell-61, #cell-62{
+	border-top: 2px solid #000000;
+}
 
-    #cell-0,  #cell-1,  #cell-2  { border-top:    2px solid #000000; }
-    #cell-2,  #cell-11, #cell-20 { border-right:  2px solid #000000; }
-    #cell-18, #cell-19, #cell-20 { border-bottom: 2px solid #000000; }
-    #cell-0,  #cell-9,  #cell-18 { border-left:   2px solid #000000; }
-    #cell-3,  #cell-4,  #cell-5  { border-top:    2px solid #000000; }
-    #cell-5,  #cell-14, #cell-23 { border-right:  2px solid #000000; }
-    #cell-21, #cell-22, #cell-23 { border-bottom: 2px solid #000000; }
-    #cell-3,  #cell-12, #cell-21 { border-left:   2px solid #000000; }
-    #cell-6,  #cell-7,  #cell-8  { border-top:    2px solid #000000; }
-    #cell-8,  #cell-17, #cell-26 { border-right:  2px solid #000000; }
-    #cell-24, #cell-25, #cell-26 { border-bottom: 2px solid #000000; }
-    #cell-6,  #cell-15, #cell-24 { border-left:   2px solid #000000; }
-    #cell-27, #cell-28, #cell-29 { border-top:    2px solid #000000; }
-    #cell-29, #cell-38, #cell-47 { border-right:  2px solid #000000; }
-    #cell-45, #cell-46, #cell-47 { border-bottom: 2px solid #000000; }
-    #cell-27, #cell-36, #cell-45 { border-left:   2px solid #000000; }
-    #cell-30, #cell-31, #cell-32 { border-top:    2px solid #000000; }
-    #cell-32, #cell-41, #cell-50 { border-right:  2px solid #000000; }
-    #cell-48, #cell-49, #cell-50 { border-bottom: 2px solid #000000; }
-    #cell-30, #cell-39, #cell-48 { border-left:   2px solid #000000; }
-    #cell-33, #cell-34, #cell-35 { border-top:    2px solid #000000; }
-    #cell-35, #cell-44, #cell-53 { border-right:  2px solid #000000; }
-    #cell-51, #cell-52, #cell-53 { border-bottom: 2px solid #000000; }
-    #cell-33, #cell-42, #cell-51 { border-left:   2px solid #000000; }
-    #cell-54, #cell-55, #cell-56 { border-top:    2px solid #000000; }
-    #cell-56, #cell-65, #cell-74 { border-right:  2px solid #000000; }
-    #cell-72, #cell-73, #cell-74 { border-bottom: 2px solid #000000; }
-    #cell-54, #cell-63, #cell-72 { border-left:   2px solid #000000; }
-    #cell-57, #cell-58, #cell-59 { border-top:    2px solid #000000; }
-    #cell-59, #cell-68, #cell-77 { border-right:  2px solid #000000; }
-    #cell-75, #cell-76, #cell-77 { border-bottom: 2px solid #000000; }
-    #cell-57, #cell-66, #cell-75 { border-left:   2px solid #000000; }
-    #cell-60, #cell-61, #cell-62 { border-top:    2px solid #000000; }
-    #cell-62, #cell-71, #cell-80 { border-right:  2px solid #000000; }
-    #cell-78, #cell-79, #cell-80 { border-bottom: 2px solid #000000; }
-    #cell-60, #cell-69, #cell-78 { border-left:   2px solid #000000; }
-    </style>
+#cell-2, #cell-11, #cell-20, #cell-5, #cell-14, #cell-23, #cell-8, #cell-17, #cell-26, #cell-29, #cell-38, #cell-47,
+#cell-32, #cell-41, #cell-50, #cell-35, #cell-44, #cell-53, #cell-56, #cell-65, #cell-74, #cell-59, #cell-68, #cell-77,
+#cell-62, #cell-71, #cell-80{
+	border-right: 2px solid #000000;
+}
+
+#cell-18, #cell-19, #cell-20, #cell-21, #cell-22, #cell-23, #cell-24, #cell-25, #cell-26, #cell-45, #cell-46, #cell-47 
+#cell-48, #cell-49, #cell-50, #cell-51, #cell-52, #cell-53, #cell-72, #cell-73, #cell-74, #cell-75, #cell-76, #cell-77,
+#cell-78, #cell-79, #cell-80{
+	border-bottom: 2px solid #000000;
+}
+
+#cell-0, #cell-9, #cell-18, #cell-3, #cell-12, #cell-21, #cell-6, #cell-15, #cell-24, #cell-27, #cell-36, #cell-45
+#cell-30, #cell-39, #cell-48, #cell-33, #cell-42, #cell-51, #cell-54, #cell-63, #cell-72, #cell-57, #cell-66, #cell-75,
+#cell-60, #cell-69, #cell-78{
+	border-left: 2px solid #000000;
+}
+
+</style>
 </head>
 
 <body onload="conectarWS()">
-    <div class="limiter">
-        <div class="container-login100">
-            <div class="wrap-login100 w1260 p-l-25 p-r-25 p-t-30 p-b-10 col-lg-8">
-                <span class="login100-form-title p-b-25">
-                        Partida de Sudokus
-                </span>
-                <div class="row p-b-30">
-                    <div class=" col-lg-6" style="padding-left: 2.2rem;">
-                        <div>
-                            <div class="contenedor p-t-8 p-b-14">
-                                <div>
-                                    <span class="glyphicon glyphicon-comment"></span>Completa el sudoku
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="contenedor p-t-8 p-b-14">
-                                <div>
-                                    <table id="grid">
-                                        <tbody>
-                                            <tr>
-                                                <td><select id="cell-0" onchange="move(0)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-1" onchange="move(1)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-2" onchange="move(2)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-3" onchange="move(3)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-4" onchange="move(4)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-5" onchange="move(5)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-6" onchange="move(6)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-7" onchange="move(7)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-8" onchange="move(8)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                            </tr>
-                                            <tr>
-                                                <td><select id="cell-9" onchange="move(9)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-10" onchange="move(10)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-11" onchange="move(11)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-12" onchange="move(12)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-13" onchange="move(13)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-14" onchange="move(14)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-15" onchange="move(15)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-16" onchange="move(16)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-17" onchange="move(17)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                            </tr>
-                                            <tr>
-                                                <td><select id="cell-18" onchange="move(18)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-19" onchange="move(19)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-20" onchange="move(20)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-21" onchange="move(21)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-22" onchange="move(22)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-23" onchange="move(23)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-24" onchange="move(24)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-25" onchange="move(25)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-26" onchange="move(26)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                            </tr>
-                                            <tr>
-                                                <td><select id="cell-27" onchange="move(27)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-28" onchange="move(28)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-29" onchange="move(29)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-30" onchange="move(30)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-31" onchange="move(31)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-32" onchange="move(32)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-33" onchange="move(33)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-34" onchange="move(34)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-35" onchange="move(35)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                            </tr>
-                                            <tr>
-                                                <td><select id="cell-36" onchange="move(36)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-37" onchange="move(37)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-38" onchange="move(38)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-39" onchange="move(39)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-40" onchange="move(40)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-41" onchange="move(41)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-42" onchange="move(42)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-43" onchange="move(43)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-44" onchange="move(44)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                            </tr>
-                                            <tr>
-                                                <td><select id="cell-45" onchange="move(45)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-46" onchange="move(46)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-47" onchange="move(47)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-48" onchange="move(48)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-49" onchange="move(49)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-50" onchange="move(50)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-51" onchange="move(51)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-52" onchange="move(52)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-53" onchange="move(53)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                            </tr>
-                                            <tr>
-                                                <td><select id="cell-54" onchange="move(54)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-55" onchange="move(55)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-56" onchange="move(56)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-57" onchange="move(57)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-58" onchange="move(58)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-59" onchange="move(59)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-60" onchange="move(60)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-61" onchange="move(61)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-62" onchange="move(62)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                            </tr>
-                                            <tr>
-                                                <td><select id="cell-63" onchange="move(63)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-64" onchange="move(64)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-65" onchange="move(65)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-66" onchange="move(66)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-67" onchange="move(67)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-68" onchange="move(68)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-69" onchange="move(69)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-70" onchange="move(70)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-71" onchange="move(71)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                            </tr>
-                                            <tr>
-                                                <td><select id="cell-72" onchange="move(72)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-73" onchange="move(73)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-74" onchange="move(74)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-75" onchange="move(75)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-76" onchange="move(76)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-77" onchange="move(77)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-78" onchange="move(78)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-79" onchange="move(79)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                                <td><select id="cell-80" onchange="move(80)">
-                                                        <option value="0"></option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="textosRecibidos" class="p-t-16 p-b-22" style="text-align: center"></div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="contenedor">
-                            <div class="card card-primary">
-                                <div class="card-header">
-                                    <span class="glyphicon glyphicon-comment"></span>Chat de jugadores
-                                </div>
-                                <div class="card-body" style="overflow-y: auto; height: 350px;" id="chatjugadores">
-                                    <ul class="chat"> </ul>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="input-group">
-                                        <input id="msg" type="text" class="form-control input-sm" placeholder="Escribir..." />
-                                        <span class="input-group-btn">
-                                        <button class="btn" id="btnEnviar" onclick="enviarMensaje()" style="color: #ffffff; background-color: #0250c5; border-color: #0250c5;">Enviar</button>
-                                    </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="dropDownSelect1"></div>
-    <li style="display: none" id="chatDeJugadores" class="left clearfix">
-        <div class="chat-body clearfix">
-            <div class="header">
-                <strong class="primary-font usuarioChat"></strong>
-            </div>
-            <p class="mensajeChat"></p>
-        </div>
-    </li>
-    <!--===============================================================================================-->
-    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="vendor/bootstrap/js/popper.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="vendor/select2/select2.min.js"></script>
-    <!--===============================================================================================-->
-    <script src="js/main.js"></script>
-    <script>
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100 w1260 p-l-25 p-r-25 p-t-30 p-b-10 col-lg-8">
+				<span class="login100-form-title p-b-25"> Partida de Sudokus
+				</span>
+				<div class="row p-b-30">
+					<div class=" col-lg-6" style="padding-left: 2.2rem;">
+						<div>
+							<div class="contenedor p-t-8 p-b-14">
+								<div>
+									<span class="glyphicon glyphicon-comment"></span>Completa el
+									sudoku
+								</div>
+							</div>
+						</div>
+						<div>
+							<div class="contenedor p-t-8 p-b-14">
+								<div id="parteSudoku">
+								</div>
+							</div>
+						</div>
+						<div id="textosRecibidos" class="p-t-16 p-b-22"
+							style="text-align: center"></div>
+					</div>
+					<div class="col-lg-6">
+						<div class="contenedor">
+							<div class="card card-primary">
+								<div class="card-header">
+									<span class="glyphicon glyphicon-comment"></span>Chat de
+									jugadores
+								</div>
+								<div class="card-body" style="overflow-y: auto; height: 350px;"
+									id="chatjugadores">
+									<ul class="chat">
+									</ul>
+								</div>
+								<div class="card-footer">
+									<div class="input-group">
+										<input id="msg" type="text" class="form-control input-sm"
+											placeholder="Escribir..." /> <span class="input-group-btn">
+											<button class="btn" id="btnEnviar" onclick="enviarMensaje()"
+												style="color: #ffffff; background-color: #0250c5; border-color: #0250c5;">Enviar</button>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="dropDownSelect1"></div>
+	<li style="display: none" id="chatDeJugadores" class="left clearfix">
+		<div class="chat-body clearfix">
+			<div class="header">
+				<strong class="primary-font usuarioChat"></strong>
+			</div>
+			<p class="mensajeChat"></p>
+		</div>
+	</li>
+	<!--===============================================================================================-->
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="js/main.js"></script>
+	<script>
     var ws = {};
-
+	function generar_sudoku(){
+		var body = document.getElementById('parteSudoku');
+		
+		var tabla = document.createElement("table");
+		var tb1Body = document.createElement("tbody");
+		
+		for(var i=0;i<9;i++){
+			var hilera = document.createElement("tr");
+			for (var j=0;j<9;j++){
+				var celda = document.createElement("td");
+				var lista = document.createElement('select');
+				for(var k=0;k<10;k++){
+					var op=new Option(""+k,""+k);
+					lista.appendChild(op);
+				}
+				var id=i*9+j;
+				lista.setAttribute("id","cell-"+id);
+				lista.setAttribute("onchange","move("+id+")")
+				celda.appendChild(lista);
+				hilera.appendChild(celda);
+			}
+			tb1Body.appendChild(hilera);
+		}
+		tabla.appendChild(tb1Body);
+		body.appendChild(tabla);
+		
+	}
     //unirse a una partida
     function joinGame(gameName) {
         var request = new XMLHttpRequest();
@@ -1229,7 +258,7 @@
     //conexion con el WS y gestion de mensajes recibidos
     function conectarWS() {
         if (window.WebSocket == undefined) {
-            alert("Lo sentimos, pero tu navegador no soporta este tipo de comunicación");
+            alert("Lo sentimos, pero tu navegador no soporta este tipo de comunicacion");
             return;
         }
 
@@ -1269,6 +298,7 @@
 					else
 						sudokuinicialhtml(mensaje.board.tableroinicial1);
                 }
+                
             //si se ha hecho un movimiento en el sudoku
             } else if (mensaje.TYPE == "MOVIMIENTOSUDOKU") {
             	//si todavia no hay ganador comprobamos la celda
@@ -1280,17 +310,23 @@
     				//hacemos la comprobacion de la ultima celda en el ganador
             		if(mensaje.winner.userName == sessionStorage.getItem("userName"))
     					comprobarCelda(mensaje.celda, mensaje.valor, mensaje.board.tablerofinal);
-            		//notificamos a los players del final de la partida
+            		
+    				//notificamos a los players del final de la partida
     				add("-------------------")
     				add("FIN DE LA PARTIDA!!");
     				add("Ganador: " + mensaje.winner.userName);
+    				
+    				//regresamos al menu principal
+    				alert("La partida ha terminado. Se volverá al menú principal.");
+    				window.location.href = "menu.html";
     			}  	
             }
         }
     }
 
-    //si se ha iniciado sesión se unirá a una partida de SUDOKU
+    //si se ha iniciado sesion se unira a una partida de SUDOKU
     if (sessionStorage.getItem('userName') != null) {
+    	generar_sudoku();
         joinGame('Sudoku');
     }
     </script>
