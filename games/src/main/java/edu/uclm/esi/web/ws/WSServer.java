@@ -93,10 +93,10 @@ public class WSServer extends TextWebSocketHandler {
 		}else if(jso.get("TYPE").equals("SUDOKU")) {
 			Player player = (Player) session.getAttributes().get("player");
 			JSONArray celda = jso.getJSONArray("coordinate");
-			int valor = jso.getInt("value");
+			//int valor = jso.getInt("value");
 			jso.put("player", jso.get("player"));	
-			Match match = Manager.get().moveSudoku(player, celda, valor);
-			sendMoveSudoku(player, celda, valor, match);		
+			Match match = Manager.get().move(player, celda);
+			sendMoveSudoku(player, celda, match);		
 		}	
 	}
 	
@@ -165,7 +165,7 @@ public class WSServer extends TextWebSocketHandler {
 	 * @param valor: valor nuevo en la casilla
 	 * @param match: partida donde esta el player
 	 */
-	private void sendMoveSudoku(Player player, JSONArray celda, int valor, Match match) {
+	private void sendMoveSudoku(Player player, JSONArray celda, Match match) {
 		//enviar movimiento de ese jugador en su partida
 		ObjectMapper mapper=new ObjectMapper();
 		JSONObject jso;
@@ -175,8 +175,9 @@ public class WSServer extends TextWebSocketHandler {
 			jso.put("match", match);	
 			int[] iC=new int[celda.length()];
 			iC[0]=celda.getInt(0);
+			iC[1]=celda.getInt(1);
 			jso.put("celda", iC[0]);
-			jso.put("valor", valor);
+			jso.put("valor", iC[1]);
 			
 			//si hay ganador le mandamos un mensaje a los 2 players
 			if(match.getWinner()!=null) {

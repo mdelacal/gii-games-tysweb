@@ -31,8 +31,8 @@ public class SudokuBoard extends Board {
 		return tablerofinal;
 	}
 	
-	/*
-	 * SUDOKU DIFICIL
+	
+	 //* SUDOKU DIFICIL
 	public int [] generar_Inicial(){
 	    int [] sudoku = new int[81];
 	    sudoku[0]=1;
@@ -56,12 +56,12 @@ public class SudokuBoard extends Board {
 	    
 	    return sudoku;
 	  }
-	*/
+	
 	
 	//SUDOKU FACIL PARA PRUEBAS
-	public int [] generar_Inicial(){
+	/*public int [] generar_Inicial(){
 	    int [] sudoku = new int[81];
-	    sudoku[0]=0;
+	    sudoku[0]=1;
 	    sudoku[1]=0;
 	    sudoku[2]=2;
 	    sudoku[3]=9;
@@ -154,7 +154,7 @@ public class SudokuBoard extends Board {
 	    sudoku[80]=6;
 	    
 	    return sudoku;
-	  }
+	  }*/
 	
 	//SUDOKU SOLUCION
 	public int [] resolver(){
@@ -257,10 +257,14 @@ public class SudokuBoard extends Board {
 	
 	@Override
 	public void move(Player player, int[] coordinates) throws Exception {
-
+		if(this.match.getPlayers().get(0)==player) {
+			tableroinicial0[coordinates[0]] = coordinates[1];
+		}else if(this.match.getPlayers().get(1)==player){
+			tableroinicial1[coordinates[0]] = coordinates[1];
+		} 
 	}
 	
-	@Override
+	/*@Override
 	public void moveSudoku(Player player, int[] coordinates, int valor) throws Exception {
 		//vemos que jugador ha hecho el movimiento y lo actualizamos en su sudoku
 		if(this.match.getPlayers().get(0)==player) {
@@ -268,7 +272,7 @@ public class SudokuBoard extends Board {
 		}else if(this.match.getPlayers().get(1)==player){
 			tableroinicial1[coordinates[0]] = valor;
 		} 	
-	}
+	}*/
 
 	@Override
 	public Player getWinner() {
