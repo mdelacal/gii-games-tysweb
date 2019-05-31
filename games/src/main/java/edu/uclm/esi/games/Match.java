@@ -72,7 +72,7 @@ public abstract class Match {
 			throw new Exception("The match is finished");
 		
 		//si no ha terminado la partida hacemos el movimiento en el sudoku
-		this.board.moveSudoku(player, celda, valor);
+		//this.board.moveSudoku(player, celda, valor);
 
 		//vemos quien ha ganado, si es que ya hay ganador
 		this.winner=this.board.getWinner();

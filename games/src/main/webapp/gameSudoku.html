@@ -205,7 +205,7 @@ input:disabled {
 					lista.appendChild(op);
 				}
 				var id=i*9+j;
-				lista.setAttribute("id", "cellPropio-"+id);
+				lista.setAttribute("id","cellPropio-"+id);
 				lista.setAttribute("onchange","move("+id+")")
 				celda.appendChild(lista);
 				hilera.appendChild(celda);
@@ -228,12 +228,9 @@ input:disabled {
 				var celda = document.createElement("td");
 				var lista = document.createElement('select');
 				var op=new Option("","");
-				/*for(var k=0;k<10;k++){
-					var op=new Option(""+k,""+k);
-					lista.appendChild(op);
-				}*/
 				var id=i*9+j;
 				lista.setAttribute("id","cellRival-"+id);
+				lista.setAttribute("disabled",true);
 				celda.appendChild(lista);
 				hilera.appendChild(celda);
 			}
@@ -280,8 +277,7 @@ input:disabled {
         var p = {
             TYPE: "SUDOKU",
             player: sessionStorage.getItem('userName'),
-            coordinate: [coordinate, document.getElementById("cellPropio-"+coordinate).value],
-            //value: document.getElementById("cellPropio-" + coordinate).value
+            coordinate: [coordinate,document.getElementById("cellPropio-"+coordinate).value],
         };
         ws.send(JSON.stringify(p));
     }
@@ -292,8 +288,11 @@ input:disabled {
     	for(i=0; i<81; i++){
     		if(sudoku[i]!=0){
     			var celda = "cellPropio-" + i;
+    			var celdaRival="cellRival-"+i;
     			document.getElementById(celda).selectedIndex = sudoku[i];
     			document.getElementById(celda).disabled = true;
+    			var element=document.getElementById(celdaRival);
+    			element.style.backgroundColor="#000000";
 			}
 		}
     }
@@ -309,11 +308,17 @@ input:disabled {
     		element.style.backgroundColor = "#ffccd1";
     	}
     }
-
+    function notificarMovimiento(celda, valor,tablerofinal){
+    	var cell= "cellRival-"+celda;
+    	var element = document.getElementById(cell);
+    	if(tablerofinal[celda]==valor){
+    		element.style.backgroundColor = "#fce63f";
+    	}
+    }
     //conexion con el WS y gestion de mensajes recibidos
     function conectarWS() {
         if (window.WebSocket == undefined) {
-            alert("Lo sentimos, pero tu navegador no soporta este tipo de comunicacion");
+            alert("Lo sentimos, pero tu navegador no soporta este tipo de comunicaciÃ³n");
             return;
         }
 
@@ -357,20 +362,24 @@ input:disabled {
             } else if (mensaje.TYPE == "MOVIMIENTOSUDOKU") {
             	//si todavia no hay ganador comprobamos la celda
             	if (mensaje.winner==null){
-            		comprobarCelda(mensaje.celda, mensaje.valor, mensaje.board.tablerofinal);
+            		if(mensaje.current_player == sessionStorage.getItem("userName")){
+            			comprobarCelda(mensaje.celda, mensaje.valor, mensaje.board.tablerofinal);
+            		}
+            		else{
+            			notificarMovimiento(mensaje.celda,mensaje.valor,mensaje.board.tablerofinal);
+            		}
+            		
             	}
             	//si hay ganador final de la partida
             	else if (mensaje.winner!=null){
     				//hacemos la comprobacion de la ultima celda en el ganador
             		if(mensaje.winner.userName == sessionStorage.getItem("userName"))
     					comprobarCelda(mensaje.celda, mensaje.valor, mensaje.board.tablerofinal);
-            		
             		//notificamos a los players del final de la partida
     				add("-------------------")
     				add("FIN DE LA PARTIDA!!");
     				add("Ganador: " + mensaje.winner.userName);
-					
-					//regresamos al menu principal
+    				//regresamos al menu principal
 					alert("La partida ha terminado. Se volverá al menú principal.");
 					window.location.href = "menu.html";
     			}  	
@@ -378,7 +387,7 @@ input:disabled {
         }
     }
 
-    //si se ha iniciado sesionn se unira a una partida de SUDOKU
+    //si se ha iniciado sesion se unira a una partida de SUDOKU
     if (sessionStorage.getItem('userName') != null) {
     	generar_sudoku_propio();
     	generar_sudoku_rival();
@@ -388,3 +397,4 @@ input:disabled {
 </body>
 
 </html>
+

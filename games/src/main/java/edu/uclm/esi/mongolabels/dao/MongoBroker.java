@@ -113,7 +113,17 @@ public class MongoBroker {
 		BsonDocument bso=iterator.first();
 		return Bson2Object.getObject(bso);
 	}
-	
+	public BsonDocument load(String collectionName, BsonDocument criterion) throws Exception  {
+		MongoCollection<BsonDocument> collection=this.db.getCollection(collectionName, BsonDocument.class);
+		BsonDocument bsoBytes=new BsonDocument();
+		bsoBytes.append("sudokuInicial", new BsonString(""));
+		bsoBytes.append("sudokuFinal", new BsonString(""));
+		FindIterable<BsonDocument> iterator = collection.find(criterion).projection(bsoBytes);
+		if (iterator==null)
+			return null;
+		BsonDocument bso=iterator.first();
+		return bso;
+	}
 	//cambios para poner la foto
 	public BsonDocument loadBinary(String collectionName, BsonDocument criterion) throws Exception {
 		MongoCollection<BsonDocument> collection=this.db.getCollection(collectionName, BsonDocument.class);

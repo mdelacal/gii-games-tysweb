@@ -113,10 +113,4 @@ public class PPTBoard extends Board {
 		return false;
 	}
 
-	@Override
-	public void moveSudoku(Player player, int[] coordinates, int valor) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

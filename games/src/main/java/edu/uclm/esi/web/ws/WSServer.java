@@ -95,7 +95,7 @@ public class WSServer extends TextWebSocketHandler {
 			JSONArray celda = jso.getJSONArray("coordinate");
 			//int valor = jso.getInt("value");
 			jso.put("player", jso.get("player"));	
-			Match match = Manager.get().move(player, celda);
+			Match match = Manager.get().move(player,celda);
 			sendMoveSudoku(player, celda, match);		
 		}	
 	}
@@ -178,9 +178,10 @@ public class WSServer extends TextWebSocketHandler {
 			iC[1]=celda.getInt(1);
 			jso.put("celda", iC[0]);
 			jso.put("valor", iC[1]);
+			jso.put("current_player", player.getUserName());
 			
 			//si hay ganador le mandamos un mensaje a los 2 players
-			if(match.getWinner()!=null) {
+			//if(match.getWinner()!=null) {
 				Vector<Player> players = match.getPlayers();
 				for(Player p : players) {
 					WebSocketSession session=sessionsByPlayer.get(p.getUserName());
@@ -188,11 +189,11 @@ public class WSServer extends TextWebSocketHandler {
 					session.sendMessage(message);
 				}
 			//si no hay ganador se envia el movimiento de ese player
-			}else {	
-				WebSocketSession session=sessionsByPlayer.get(player.getUserName());
-				WebSocketMessage<?> message=new TextMessage(jso.toString());
-				session.sendMessage(message);
-			}
+			//}else {	
+				//WebSocketSession session=sessionsByPlayer.get(player.getUserName());
+				//WebSocketMessage<?> message=new TextMessage(jso.toString());
+				//session.sendMessage(message);
+			//}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
